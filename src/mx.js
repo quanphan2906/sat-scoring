@@ -1,9 +1,5 @@
-import firebase from "firebase";
+import firebase from 'firebase';
 import shortid from 'shortid';
-
-// firebase.constructor.prototype.putFiles = 
-
-const signIn = async (email, password) => await firebase.auth().signInWithEmailAndPassword(email, password);
 
 const putFiles = (files) => {
   var ref = firebase.storage().ref();
@@ -17,42 +13,40 @@ const putFiles = (files) => {
   );
 };
 
-const init = (config) => firebase.initializeApp(config);
+const init = (config) => {
+  firebase.initializeApp(config);
+};
 
-// var config = {
-//   apiKey: "AIzaSyBPYNsWiUMyahGHOQXNKGZYRAD8k1DGiNQ",
-//   authDomain: "camp-2019.firebaseapp.com",
-//   databaseURL: "https://camp-2019.firebaseio.com",
-//   projectId: "camp-2019",
-//   storageBucket: "camp-2019.appspot.com",
-//   messagingSenderId: "580757596336"
-// };
 
-// firebase.initializeApp(config);
+const auth = () => firebase.auth();
 
+const referenceField = (model, _id) => {
+  const db = firebase.firestore();
+  return db.doc(`${model}/${_id}`);
+};
 
 const collection = (collectionName) => {
   const db = firebase.firestore();
   const firebaseCollection = db.collection(collectionName);
+
   const getAll = async () => {
     const data = [];
     const query = await firebaseCollection.get();
-    query.forEach(doc => {
-      const snapshot = doc.data()
-      snapshot._id = doc.id
+    query.forEach((doc) => {
+      const snapshot = doc.data();
+      snapshot._id = doc.id;
       data.push(snapshot);
     });
     return data;
   }
 
-  
 
   const count = async (res) => {
     const r = await res.get();
     return r.docs.length;
-  }
-  
-  const paginate = async (pageNumber, perPage, query, populate="") => {
+  };
+
+  const paginate = async (pageNumber, perPage, query, populate = '') => {
     const data = [];
     const queryValue = [];
     let res = firebaseCollection;
@@ -62,20 +56,20 @@ const collection = (collectionName) => {
       queryValue.push(query[key]);
     }
 
-    if(queryValue.length > 0) {
+    if (queryValue.length > 0) {
       res = res
         .startAt(...queryValue)
-        .endAt(...queryValue)
+        .endAt(...queryValue);
     }
 
-    const total = await count(res)
+    const total = await count(res);
 
     res = await res
-      .limit(perPage*pageNumber)
+      .limit(perPage * pageNumber)
       .get();
 
     let i = 0;
-    res.forEach(doc => {
+    res.forEach((doc) => {
       if (i >= (pageNumber - 1) * perPage) {
         const snapshot = doc.data();
         snapshot._id = doc.id;
@@ -84,17 +78,19 @@ const collection = (collectionName) => {
       i += 1;
     });
     if (populate) {
-      for(let i=0; i < data.length; i++) {
-        if (data[i].userRef) {
-          const user = await data[i].userRef.get()
-          data[i].userRef = user.data();
-        }
-      }
+      populate.map(async (populatePath) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i][populatePath]) {
+            const child = await data[i][populatePath].get()
+            data[i][populatePath] = child.data();
+          };
+        };
+      });
     }
-    return {data, total}
+    return { data, total }
   }
 
-  const getOne = async (_id) => {
+  const _get = async (_id) => {
     let data;
     await firebaseCollection.doc(_id).get().then(query => {
       data = { ...query.data(), _id: query.id }
@@ -102,18 +98,24 @@ const collection = (collectionName) => {
     return data
   }
 
-  const getOneAndPopulate = (_id, populatePath) => {
+  const getOne = (_id, populate = '') => {
     return new Promise(async (resolve, reject) => {
-      let data = await this.getOne(_id);
-      if(data[populatePath]) {
-        const child = await data[populatePath].get();
-        data[populatePath] = child.data();
+      const data = await _get(_id);
+      if (populate) {
+        populate.map(async (populatePath) => {
+          if (data[populatePath]) {
+            const child = await data[populatePath].get();
+            data[populatePath] = child.data();
+          }
+        });
+        resolve(data);
       }
       resolve(data);
-    });
-  }
 
-  const save = (data) => {
+    });
+  };
+
+  const create = (data) => {
     return new Promise(async (resolve, reject) => {
       try {
         await firebaseCollection.doc().set(data);
@@ -122,7 +124,33 @@ const collection = (collectionName) => {
         reject(error);
       }
     });
+  };
+
+
+  const update = (_id, data) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await firebaseCollection.doc(_id).update(data);
+        const res = await getOne(_id);
+        resolve(res);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+
+
+  const destroy = (_id) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await firebaseCollection.doc(_id).delete();
+        resolve({ success: 1 });
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
+
 
   const saveWithId = (_id, data) => {
     return new Promise(async (resolve, reject) => {
@@ -137,20 +165,22 @@ const collection = (collectionName) => {
   return {
     getAll,
     getOne,
-    getOneAndPopulate,
+    update,
+    destroy,
     paginate,
-    save,
+    create,
     saveWithId,
-    putFiles,
   };
 };
 
-const mxFirebase = {
+export default {
   init,
-  signIn,
   putFiles,
   collection,
+  referenceField,
+  auth,
 };
+
 
 const openModal = (modal, overlay) => {
   overlay.classList.add('is-open');
