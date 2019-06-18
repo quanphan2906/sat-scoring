@@ -1637,6 +1637,10 @@
   object-fit: cover;
 }
 
+.mx-img-upload .mx-img-preview {
+  opacity: 0;
+}
+
 .mx-square {
   position: relative;
   padding-top: 100%;
