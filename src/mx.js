@@ -173,7 +173,7 @@ const collection = (collectionName) => {
   };
 };
 
-export default {
+const mxFirebase = {
   init,
   putFiles,
   collection,
