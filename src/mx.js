@@ -18,7 +18,7 @@ const init = (config) => {
 };
 
 
-const auth = () => firebase.auth();
+const signIn = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
 
 const referenceField = (model, _id) => {
   const db = firebase.firestore();
@@ -178,7 +178,7 @@ const mxFirebase = {
   putFiles,
   collection,
   referenceField,
-  auth,
+  signIn,
 };
 
 
