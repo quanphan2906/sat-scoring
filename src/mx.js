@@ -20,6 +20,8 @@ const init = (config) => {
 
 const signIn = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
 
+const signUp = (email, password) => firebase.auth().createUserWithEmailAndPassword(email, password);
+
 const referenceField = (model, _id) => {
   const db = firebase.firestore();
   return db.doc(`${model}/${_id}`);
@@ -179,6 +181,7 @@ const mxFirebase = {
   collection,
   referenceField,
   signIn,
+  signUp
 };
 
 
