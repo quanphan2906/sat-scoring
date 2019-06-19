@@ -117,7 +117,7 @@ const collection = (collectionName) => {
     });
   };
 
-  const create = (data) => {
+  const save = (data) => {
     return new Promise(async (resolve, reject) => {
       try {
         await firebaseCollection.doc().set(data);
@@ -170,7 +170,7 @@ const collection = (collectionName) => {
     update,
     destroy,
     paginate,
-    create,
+    save,
     saveWithId,
   };
 };
