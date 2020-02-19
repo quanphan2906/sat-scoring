@@ -1637,9 +1637,9 @@
   object-fit: cover;
 }
 
-.mx-img-upload .mx-img-preview {
+/* .mx-img-upload .mx-img-preview {
   opacity: 0;
-}
+} */
 
 .mx-square {
   position: relative;
