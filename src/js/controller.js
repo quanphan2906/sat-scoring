@@ -134,7 +134,28 @@ controller.submit = async (userEmail) => {
     }
 }
 
-controller.checkAnswers = async (materialInfo, sectionName, answers, userEmail) => {
+const reportWrongAnsToClass = async (className, materialName, sectionName, wrongAnswers) => {
+    const db = firebase.firestore();
+    const classInfo = await controller.getClassInfoWithClassName(className);
+    const wrongAnswersFirebase = classInfo.data.wrongAnswers[materialName][sectionName];
+    var newWrongAnswers = [...wrongAnswers, ...wrongAnswersFirebase]; 
+
+    newWrongAnswers = newWrongAnswers.sort((a, b) => {return a - b});
+    console.log("newWrongAnswers", newWrongAnswers);
+
+    var wrongAnswersOfficial = [newWrongAnswers[0]];
+    for (let i = 1; i < newWrongAnswers.length; i++){
+        if (newWrongAnswers[i] != newWrongAnswers[i-1]){
+            wrongAnswersOfficial.push(newWrongAnswers[i]);
+        }
+    }
+    console.log("wrongAnswersOfficial", wrongAnswersOfficial);
+    await db.collection("classes").doc(classInfo.id).update({
+        [`wrongAnswers.${materialName}.${sectionName}`]: wrongAnswersOfficial,
+    })
+}
+
+controller.checkAnswers = async (className, materialInfo, sectionName, answers, userEmail) => {
     //retrieve data
     var keys = [];
     for (let section of materialInfo.data.sections){
@@ -176,6 +197,8 @@ controller.checkAnswers = async (materialInfo, sectionName, answers, userEmail) 
             wrongAnswers: wrongAnswers,
         })
     })
+
+    await reportWrongAnsToClass(className, materialInfo.data.name, sectionName, wrongAnswers);
 }
 
 controller.overview = async () => {

@@ -42,20 +42,19 @@
         <div class="font-24px margin-top-24px" style="align-self: center;">Materials</div>
         <div id="material-list-container" class="flex-row" style="margin-top: 24px;">
 
-            <div each="{material in opts.materials}" class="border-standard box-shadow-standard fit-content margin-bot-24px center" style="margin-left: 48px; width: 50%;">
+            <div each="{sections, materialName in opts.wrongAnswers}" class="border-standard box-shadow-standard fit-content margin-bot-24px center" style="margin-left: 48px; width: 50%;">
                 <div class="old-test-container flex-row fit-content" style="flex-wrap: nowrap;">
 
                     <img src="../assets/img-placeholder.jpg" alt="" width="100px" height="100px" style="margin: 12px;">
 
                     <div class="flex-col" style="margin: 12px;">
-                        <div class="font-16px">{material.name}</div>
-                        <div class="font-12px"><i>Type: {material.type}</i></div>
+                        <div class="font-16px">{materialName}</div>
 
-                        <div each="{section in material.sections}">
-                            <div>{section.sectionName}</div>
-                            <div class="font-14px margin-top-12px">
-                                Wrong answers: <span each="{answer in section.wrongAnswers}">{answer}, </span>
-                            </div>
+                        <div each="{wrongAnswersData, sectionName in sections}">
+                            <div><b>{sectionName}</b> <span class="margin-left-12px"></span> <span each="{answer in wrongAnswersData}">{answer}, </span></div>
+                            <!--  <div class="font-14px margin-bot-12px">
+                                Wrong answers: 
+                            </div>  -->
                         </div>
 
                     </div>

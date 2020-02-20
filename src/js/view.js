@@ -158,8 +158,8 @@ view.submit = async (userEmail) => {
 
     //create answer list
     const createAnswerList = async (materialInfo, sectionName) => {
-        console.log(materialInfo);
         const answerList = document.getElementById("answers-list");
+        answerList.innerHTML = "";
         const keys = await controller.getAnswerKeys(materialInfo, sectionName);
         const keyTotal = keys.length - 1;
         for (let i = 0; i < keyTotal; i++){
@@ -171,7 +171,6 @@ view.submit = async (userEmail) => {
             </div>
             `;
         }
-        console.log(answerList);
     }
 
         //set default
@@ -226,7 +225,7 @@ view.submit = async (userEmail) => {
             answers.push(answer);
         };
 
-        await controller.checkAnswers(materialInfo, sectionName, answers, userEmail);
+        await controller.checkAnswers(className, materialInfo, sectionName, answers, userEmail);
         e.target.classList.add("btn-primary");
     })
 }
@@ -335,6 +334,7 @@ view.classInfoAssistant = async (userEmail) => {
         ...classInfo.data,
         userEmail
     }
+    console.log(opts);
 
     //mount page
     const classInfoAssistantPage = riot.mount("div#root", "classinfoassistant", opts);
@@ -655,7 +655,6 @@ view.materials = async (userEmail) => {
     const searchBarButton = document.getElementById("search-bar-btn");
     searchBarButton.addEventListener("click", async (e) => {
         const searchKeywords = document.getElementById("search-bar").value;
-        console.log(searchKeywords);
         const materialsInfoData = await controller.getMaterialsWithKeywords(materialsType, searchKeywords);
         if (materialsInfoData != undefined){
             materialsPage.opts.materialsWithType = materialsInfoData;
