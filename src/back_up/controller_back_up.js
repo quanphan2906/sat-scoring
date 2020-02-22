@@ -6,7 +6,7 @@ import riot from 'riot';
 import route from "riot-route";
 
 //import js
-import {view} from "./view.js";
+import {view} from "../js/view";
 
 const controller = {};
 

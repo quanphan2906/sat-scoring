@@ -3,7 +3,7 @@ import {initImgUpload, initModal} from '../mx';
 import riot from 'riot';
 
 //import js
-import {controller} from "./controller.js";
+import {controller} from "./controller_back_up.js/index.js";
 
 const view = {};
 

@@ -1,3 +1,6 @@
+@import "./skeleton-css/normalize.css";
+@import "./skeleton-css/skeleton.css";
+
 * {
     margin: 0;
     padding: 0;
