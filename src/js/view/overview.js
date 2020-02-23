@@ -1,15 +1,16 @@
 import "../../css/index.css";
-import "../../css/overview.css";
 import "../../tags/overview.tag";
 import {initModal} from '../../mx';
+import controller from "../controller";
+import view from "../view";
 import riot from 'riot';
 
 const overview = async (userEmail) => {
     //get personal information
-    const userInfo = controller.getUserInfoWithEmail(userEmail);
+    const userInfo = controller.users.getUserInfoWithEmail(userEmail);
 
     //number of students & number of classes
-    const r = await controller.overview();
+    const r = await controller.overview.renderData();
     const studentsTotal = r.studentsTotal;
     const classesTotal = r.classesTotal;
     const classesInfo = r.classesInfo;
@@ -44,13 +45,18 @@ const overview = async (userEmail) => {
     const createClassBtn = document.getElementById("btn-create-class");
     createClassBtn.addEventListener("click", (e) => {
         modal.open();
-            //take data from the form
+        //close modal button
+        document.getElementById("unconfirm-delete-class-btn").addEventListener("click", (e) => {
+            modal.close();
+        })
+        
+        //take data from the form
         const createClassForm = document.getElementById("create-class-form");
         createClassForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             var studentEmails = createClassForm.emails.value.split(", ");
-            studentEmails = controller.omitSpaceInEmailArray(studentEmails);
+            studentEmails = controller.classes.omitSpaceInEmailArray(studentEmails);
             
             const students = {
                 data: [],
@@ -73,7 +79,7 @@ const overview = async (userEmail) => {
                 students,
             }
             
-            const isSuccess = await controller.createClass(classInfo);
+            const isSuccess = await controller.classes.createClass(classInfo);
             if (isSuccess){
                 modal.close();
                 window.location.href = `/classInfoAssistant?className=${classInfo.name}`;

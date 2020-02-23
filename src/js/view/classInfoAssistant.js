@@ -1,14 +1,15 @@
 import "../../css/index.css";
-import "../../css/classInfoAssistant.css";
 import "../../tags/classInfoAssistant.tag";
 import riot from 'riot';
 import {initModal} from '../../mx';
+import controller from "../controller";
+import view from "../view";
 
 const classInfoAssistant = async (userEmail) => {
     //query
     const queryResult = controller.query();
     const classNameQuery = queryResult.className;
-    const classInfo = await controller.getClassInfoWithClassName(classNameQuery);
+    const classInfo = await controller.classes.getClassInfoWithClassName(classNameQuery);
 
     //opts
     const opts = {
@@ -20,7 +21,7 @@ const classInfoAssistant = async (userEmail) => {
     const classInfoAssistantPage = riot.mount("div#root", "classinfoassistant", opts);
 
     //add event to header
-    header();
+    view.header();
 
     //create add student modal
     const addStudentModal = initModal(document.getElementById("add-student-modal"));
@@ -40,9 +41,8 @@ const classInfoAssistant = async (userEmail) => {
             e.preventDefault();
 
             var studentEmails = addStudentForm.email.value.split(", ");
-            studentEmails = controller.omitSpaceInEmailArray(studentEmails);
 
-            const r = await controller.addStudentToClass(classInfo, studentEmails);
+            const r = await controller.classes.addStudentToClass(classInfo, studentEmails);
             if (r.existUndefinedEmails){
                 for (let email of r.nonExistEmails){
                     const formError = document.createElement("div");
@@ -79,7 +79,7 @@ const classInfoAssistant = async (userEmail) => {
         document.getElementById("confirm-remove-student-btn").addEventListener("click", async (e) => {
             e.preventDefault();
             
-            await controller.removeStudentFromClass(classInfo, studentEmail);
+            await controller.classes.removeStudentFromClass(classInfo, studentEmail);
             location.reload();
         })
     }
@@ -102,7 +102,7 @@ const classInfoAssistant = async (userEmail) => {
             e.preventDefault();
 
             const materialName = addMaterialForm.materialName.value;
-            const r =  await controller.addMaterialToClass(classInfo, materialName);
+            const r =  await controller.classes.addMaterialToClass(classInfo, materialName);
             if (r.undefinedMaterial == false){
                 addMaterialModal.close();
                 location.reload();
@@ -121,7 +121,7 @@ const classInfoAssistant = async (userEmail) => {
         deleteMaterialButton.addEventListener("click", async (e) => {
             e.preventDefault();
 
-            await controller.deleteMaterialFromClass(classInfo, e.target.getAttribute("materialName"));
+            await controller.classes.deleteMaterialFromClass(classInfo, e.target.getAttribute("materialName"));
             location.reload();
         })
     }
@@ -143,7 +143,7 @@ const classInfoAssistant = async (userEmail) => {
         document.getElementById("confirm-delete-class-btn").addEventListener("click", async (e) => {
             e.preventDefault();
             
-            await controller.deleteClass(classInfo);
+            await controller.classes.deleteClass(classInfo);
             window.location.href="/overview";
         })
     })

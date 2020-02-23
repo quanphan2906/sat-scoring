@@ -1,5 +1,11 @@
 @import "./skeleton-css/normalize.css";
 @import "./skeleton-css/skeleton.css";
+@import "./materials.css";
+@import "./signup.css";
+@import "./submit.css";
+@import "./upload.css";
+@import "./userAccount.css";
+@import "../mx.css";
 
 * {
     margin: 0;

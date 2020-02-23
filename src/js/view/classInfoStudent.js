@@ -1,6 +1,7 @@
 import "../../css/index.css";
-import "../../css/classInfoStudent.css";
 import "../../tags/classInfoStudent.tag";
+import view from "../view";
+import controller from "../controller";
 
 import riot from 'riot';
 
@@ -8,7 +9,7 @@ const classInfoStudent = async (userEmail) => {
     //query
     const queryResult = controller.query();
     const classNameQuery = queryResult.className;
-    const classInfo = await controller.getClassInfoWithClassName(classNameQuery);
+    const classInfo = await controller.classes.getClassInfoWithClassName(classNameQuery);
 
     //opts
     const opts = {

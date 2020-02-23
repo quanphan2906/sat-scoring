@@ -48,6 +48,7 @@
                     </div>
                     <input name="emails" type="text" placeholder="Students' accounts (ex: billgates@gmail.com)" multiple>
                     <button class="btn-primary">Create class</button>
+                    <button id="unconfirm-delete-class-btn" class="btn-primary color-black">Nah! Maybe later</button>
                     <div id="form-error" class="form-error margin-top-12px margin-bot-24px">
                     </div>
                 </form>

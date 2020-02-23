@@ -1,7 +1,8 @@
 import "../../css/index.css";
-import "../../css/materialInfo.css";
 import "../../tags/materialInfo.tag";
 import {initModal} from '../../mx';
+import controller from "../controller";
+import view from "../view";
 
 import riot from 'riot';
 
@@ -9,7 +10,7 @@ const materialInfo = async (userEmail) => {
     //query
     const queryResult = controller.query();
     const materialNameQuery = queryResult.materialName;
-    const materialInfo = await controller.getMaterialInfoWithMaterialName(materialNameQuery);
+    const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialNameQuery);
 
     //opts
     const opts = {
@@ -19,6 +20,9 @@ const materialInfo = async (userEmail) => {
 
     //mount page
     const materialChangePage = riot.mount("div#root", "materialinfo", opts);
+
+    //header
+    view.header();
 
     //keyListContainer
     const keyListContainer = document.getElementById("key-list-container");
@@ -44,7 +48,7 @@ const materialInfo = async (userEmail) => {
 
             //display keys
             sectionName = e.target.innerText.toLowerCase();
-            const answerkeys = await controller.getAnswerKeys(materialInfo, sectionName);
+            const answerkeys = await controller.materials.getAnswerKeys(materialInfo, sectionName);
             for (let i = 0; i < answerkeys.length; i++){
                 const answer = answerkeys[i+1].toUpperCase();
                 keyListContainer.innerHTML +=`
@@ -71,7 +75,7 @@ const materialInfo = async (userEmail) => {
         };
 
         e.target.classList.remove("btn-primary");
-        await controller.editMaterial.updateKeys(materialInfo, sectionName, keys);
+        await controller.materials.updateKeys(materialInfo, sectionName, keys);
         e.target.classList.add("btn-primary");
     })
 
@@ -90,7 +94,7 @@ const materialInfo = async (userEmail) => {
         
         document.getElementById("confirm-btn").addEventListener("click", async (e) => {
             e.preventDefault();
-            await controller.editMaterial.editName(materialInfo, document.getElementById("material-new-name").value);
+            await controller.materials.editName(materialInfo, document.getElementById("material-new-name").value);
             window.location.href = `/materialInfo?materialName=${document.getElementById("material-new-name").value}`
         })
 
@@ -112,7 +116,7 @@ const materialInfo = async (userEmail) => {
         
         document.getElementById("confirm-btn").addEventListener("click", async (e) => {
             e.preventDefault();
-            await controller.editMaterial.editType(materialInfo, document.getElementById("material-new-type").value);
+            await controller.materials.editType(materialInfo, document.getElementById("material-new-type").value);
             location.reload();
         })
         
@@ -138,7 +142,7 @@ const materialInfo = async (userEmail) => {
 
             document.getElementById("confirm-btn").addEventListener("click", async (e) => {
                 e.preventDefault();
-                await controller.editMaterial.deleteSection(materialInfo, sectionName.toLowerCase());
+                await controller.materials.deleteSection(materialInfo, sectionName.toLowerCase());
                 location.reload();
             })
             
@@ -221,7 +225,7 @@ const materialInfo = async (userEmail) => {
                     answers: keys,
                 };
 
-                await controller.editMaterial.addSection(materialInfo, section);
+                await controller.materials.addSection(materialInfo, section);
                 location.reload();
             })
 

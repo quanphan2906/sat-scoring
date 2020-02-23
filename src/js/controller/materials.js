@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import "firebase/firestore";
+import controller from "../controller";
 
 const getMaterialInfoWithMaterialName = async (materialName) => {
     const db = firebase.firestore();
@@ -74,7 +75,7 @@ const uploadMaterial = async (materialInfoUpload) => {
     const db = firebase.firestore();
     const materialName = materialInfoUpload.name;
     const keywords = createKeyWords(materialName);
-    const materialInfo = await controller.getMaterialInfoWithMaterialName(materialName);
+    const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialName);
     if (materialInfo == undefined){
         //for section 1 upload
         db.collection("materials").add({

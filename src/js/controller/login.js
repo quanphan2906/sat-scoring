@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import "firebase/firestore";
+import controller from "../controller";
 
 const login = async (loginInfo) => {
     if (!loginInfo.email) {
@@ -15,7 +16,7 @@ const login = async (loginInfo) => {
             const loginResult = await firebase.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password);
             
             const email = loginResult.user.email;
-            const userInfo = await controller.getUserInfoWithEmail(email);
+            const userInfo = await controller.users.getUserInfoWithEmail(email);
             if (userInfo.data.isAssistant){
                 window.location.href = `/overview`;
             } else{

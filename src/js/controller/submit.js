@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import "firebase/firestore";
-import view from "./js/view"
+import view from "../view";
+import controller from "../controller";
 
 const renderData = async (userEmail) => {
     //get query
@@ -18,15 +19,27 @@ const renderData = async (userEmail) => {
     if (classSnapshot.docs.length == 0){
         window.location.href = "/userAccount";
     } else {
-        const materialInfo = await controller.getMaterialInfoWithMaterialName(materialNameQuery);
+        const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialNameQuery);
         return {materialInfo, classNameQuery};
     }
 }
 
+const getWrongAnswersFirebase = async (wrongAnswersId) => {
+    const db = firebase.firestore();
+    const wrongAnswersFirebaseSnapshot = await db.collection("wrongAnswers").doc(wrongAnswersId).get();
+    const wrongAnswersFirebaseInfo = wrongAnswersFirebaseSnapshot[0].data();
+    const wrongAnswersFirebase = wrongAnswersFirebaseInfo.sections[sectionName];
+    return wrongAnswersFirebase;
+}
+
 const reportWrongAnsToClass = async (className, materialName, sectionName, wrongAnswers) => {
     const db = firebase.firestore();
-    const classInfo = await controller.getClassInfoWithClassName(className);
-    const wrongAnswersFirebase = classInfo.data.wrongAnswers[materialName][sectionName];
+    const classInfo = await controller.classes.getClassInfoWithClassName(className);
+    // const wrongAnswersFirebase = classInfo.data.wrongAnswers[materialName][sectionName];
+    //query at a different collection
+    const wrongAnswersId = classInfo.data.materials[materialName];
+    const wrongAnswersFirebase = await getWrongAnswersFirebase(wrongAnswersId);
+
     var newWrongAnswers = [...wrongAnswers, ...wrongAnswersFirebase]; 
 
     newWrongAnswers = newWrongAnswers.sort((a, b) => {return a - b});
@@ -39,9 +52,12 @@ const reportWrongAnsToClass = async (className, materialName, sectionName, wrong
         }
     }
     console.log("wrongAnswersOfficial", wrongAnswersOfficial);
-    await db.collection("classes").doc(classInfo.id).update({
-        [`wrongAnswers.${materialName}.${sectionName}`]: wrongAnswersOfficial,
+    await db.collection("wrongAnswers").doc(wrongAnswersId).update({
+        [`sections.${sectionName}`]: wrongAnswersOfficial,
     })
+    // await db.collection("classes").doc(classInfo.id).update({
+    //     [`wrongAnswers.${materialName}.${sectionName}`]: wrongAnswersOfficial,
+    // })
 }
 
 const checkAnswers = async (className, materialInfo, sectionName, answers, userEmail) => {
@@ -77,7 +93,7 @@ const checkAnswers = async (className, materialInfo, sectionName, answers, userE
 
     //push wrongAnswers to Firebase
     const db = firebase.firestore();
-    const userInfo = await controller.getUserInfoWithEmail(userEmail);
+    const userInfo = await controller.users.getUserInfoWithEmail(userEmail);
     db.collection("users").doc(userInfo.id).update({
         oldTests: firebase.firestore.FieldValue.arrayUnion({
             name: `${materialInfo.data.name} - ${sectionName}`,
@@ -86,12 +102,13 @@ const checkAnswers = async (className, materialInfo, sectionName, answers, userE
             wrongAnswers: wrongAnswers,
         })
     })
+
+    await reportWrongAnsToClass (className, materialInfo.data.name, sectionName, wrongAnswers)
 }
 
 const submit = {
     renderData,
     checkAnswers,
-    reportWrongAnsToClass,
 }
 
 export {

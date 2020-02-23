@@ -1,7 +1,9 @@
+import controller from "../controller";
+
 const header = async () => {
     //back to userAccount
     const email = document.getElementById("email");
-    const userInfo = await controller.getUserInfoWithEmail(email.innerText);
+    const userInfo = await controller.users.getUserInfoWithEmail(email.innerText);
     email.addEventListener("click", (e) => {
         if (userInfo.data.isAssistant){
             window.location.href = "/overview";
@@ -13,7 +15,7 @@ const header = async () => {
     //sign out btn
     const signOut = document.getElementById("sign-out");
     signOut.addEventListener("click", (e) => {
-        controller.signOut();
+        controller.users.signOut();
         window.location.href = `/signin`;
     })
 }

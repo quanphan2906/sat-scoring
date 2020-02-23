@@ -1,5 +1,6 @@
 import "../../css/index.css";
 import "../../tags/signin.tag";
+import controller from "../controller";
 
 import riot from 'riot';
 

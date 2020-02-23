@@ -1,13 +1,14 @@
 import "../../css/index.css";
-import "../../css/materials.css";
 import "../../tags/materials.tag";
+import controller from "../controller";
+import view from "../view";
 
 import riot from 'riot';
 
 const materials = async (userEmail) => {
     //retrieve all materials
     const materialsType = "Reading";
-    const materialsWithType = await controller.getMaterialsWithType(materialsType);
+    const materialsWithType = await controller.materials.getMaterialsWithType(materialsType);
 
     //opts
     const opts = {
@@ -17,6 +18,9 @@ const materials = async (userEmail) => {
 
     //mount page
     const materialsPage = riot.mount("div#root", "materials", opts)[0];
+
+    //header
+    view.header();
 
     //upload button
     document.getElementById("upload-btn").addEventListener("click", () => {
@@ -29,7 +33,7 @@ const materials = async (userEmail) => {
         const materialTypeEleContainer = materialTypeEle.parentElement;
         materialTypeEleContainer.addEventListener("click", async (e) => {
             materialsType = e.target.innerText;
-            materialsPage.opts.materialsWithType = await controller.getMaterialsWithType(materialsType);
+            materialsPage.opts.materialsWithType = await controller.materials.getMaterialsWithType(materialsType);
             materialsPage.update();
         })
     }
@@ -48,7 +52,7 @@ const materials = async (userEmail) => {
     const searchBarButton = document.getElementById("search-bar-btn");
     searchBarButton.addEventListener("click", async (e) => {
         const searchKeywords = document.getElementById("search-bar").value;
-        const materialsInfoData = await controller.getMaterialsWithKeywords(materialsType, searchKeywords);
+        const materialsInfoData = await controller.materials.getMaterialsWithKeywords(materialsType, searchKeywords);
         if (materialsInfoData != undefined){
             materialsPage.opts.materialsWithType = materialsInfoData;
             materialsPage.update();

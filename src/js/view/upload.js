@@ -1,7 +1,8 @@
 import "../../css/index.css";
-import "../../css/upload.css";
 import "../../tags/upload.tag";
 import {initImgUpload, initModal} from '../../mx';
+import controller from "../controller";
+import view from "../view";
 
 import riot from 'riot';
 
@@ -14,6 +15,9 @@ const upload = (userEmail) => {
     //mount page
     const uploadPage = riot.mount("div#root", "upload", opts);
 
+    //header
+    view.header();
+
     //check if the material has already existed, and provide some solutions if any
     const materialNameEle = document.getElementById("material-name");
     const informModal = initModal(document.getElementById("inform-modal"))
@@ -22,7 +26,7 @@ const upload = (userEmail) => {
 
         const modalContainer = document.getElementById("modal-container");
         const materialName = materialNameEle.value;
-        const materialInfo = await controller.getMaterialInfoWithMaterialName(materialName);
+        const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialName);
         if (materialInfo == undefined){
             modalContainer.innerHTML = `<div id="inform-message" class="margin-bot-24px font-20px"></div>`;
 
@@ -134,7 +138,7 @@ const upload = (userEmail) => {
 
         uploadButton.classList.remove("btn-primary");
 
-        await controller.uploadMaterial({
+        await controller.materials.uploadMaterial({
             name: materialNameEle.value,
             type: materialInfo.type.value,
             section: section,

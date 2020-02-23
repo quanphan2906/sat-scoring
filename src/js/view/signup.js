@@ -1,5 +1,4 @@
 import "../../css/index.css";
-import "../../css/signup.css";
 import "../../tags/signup.tag";
 
 import riot from 'riot';

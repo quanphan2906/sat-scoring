@@ -1,6 +1,7 @@
 import "../../css/index.css";
-import "../../css/submit.css";
 import "../../tags/submit.tag";
+import controller from "../controller";
+import view from "../view";
 
 import riot from 'riot';
 
@@ -11,7 +12,7 @@ const renderPercentage = (percentage) => {
 
 const submit = async (userEmail) => {
     //query
-    const r = await controller.submit(userEmail);
+    const r = await controller.submit.renderData(userEmail);
     const materialInfo = r.materialInfo;
     const className = r.classNameQuery;
 
@@ -38,7 +39,7 @@ const submit = async (userEmail) => {
     const createAnswerList = async (materialInfo, sectionName) => {
         const answerList = document.getElementById("answers-list");
         answerList.innerHTML = "";
-        const keys = await controller.getAnswerKeys(materialInfo, sectionName);
+        const keys = await controller.materials.getAnswerKeys(materialInfo, sectionName);
         const keyTotal = keys.length - 1;
         for (let i = 0; i < keyTotal; i++){
             answerList.innerHTML += `
@@ -103,9 +104,12 @@ const submit = async (userEmail) => {
             answers.push(answer);
         };
 
-        await controller.checkAnswers(className, materialInfo, sectionName, answers, userEmail);
+        await controller.submit.checkAnswers(className, materialInfo, sectionName, answers, userEmail);
         e.target.classList.add("btn-primary");
     })
 }
 
-export {submit}
+export {
+    submit,
+    renderPercentage,
+}

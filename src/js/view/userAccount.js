@@ -1,12 +1,13 @@
 import "../../css/index.css";
-import "../../css/userAccount.css";
 import "../../tags/userAccount.tag";
 import {initModal} from '../../mx';
 import riot from 'riot';
+import view from "../view";
+import controller from "../controller";
 
 const userAccount = async (userEmail) => {
     //get personal information
-    const userInfo = await controller.getUserInfoWithEmail(userEmail);
+    const userInfo = await controller.users.getUserInfoWithEmail(userEmail);
     const opts = {
         ...userInfo,
     }
@@ -46,7 +47,7 @@ const userAccount = async (userEmail) => {
     confirmDeleteAccountBtn.addEventListener("click", (e) => {
         e.preventDefault();
 
-        controller.deleteAccount(userEmail);
+        controller.users.deleteAccount(userEmail);
         window.location.href = "/signup";
     })
 }

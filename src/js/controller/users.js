@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import "firebase/firestore";
+import controller from "../controller";
 
 const userCheckIn = (viewFunction) => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -16,7 +17,7 @@ const assistantCheckIn = (viewFunction) => {
     firebase.auth().onAuthStateChanged( async (user) => {
         if (user){
             const userEmail = firebase.auth().currentUser.email;
-            const userInfo = await controller.getUserInfoWithEmail(userEmail);
+            const userInfo = await controller.users.getUserInfoWithEmail(userEmail);
             if (userInfo.data.isAssistant === true){
                 viewFunction(userEmail);
             } else{
