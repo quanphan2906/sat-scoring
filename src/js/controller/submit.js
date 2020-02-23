@@ -12,30 +12,36 @@ const renderData = async (userEmail) => {
     //fetch data
     const db = firebase.firestore();
     const classSnapshot = await db.collection("classes")
-                        .where("name", "==", classNameQuery)
-                        .where("materials", "array-contains", materialNameQuery)
-                        .get();
+                          .where("name", "==", classNameQuery)
+                          .get();
 
     if (classSnapshot.docs.length == 0){
         window.location.href = "/userAccount";
     } else {
-        const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialNameQuery);
-        return {materialInfo, classNameQuery};
+        const classInfo = classSnapshot.docs[0].data();
+        if (classInfo.materials[materialNameQuery]){
+            const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialNameQuery);
+            return {materialInfo, classNameQuery};
+        } else {
+            window.history.back();
+        }
     }
 }
 
 const getWrongAnswersFirebase = async (wrongAnswersId) => {
     const db = firebase.firestore();
     const wrongAnswersFirebaseSnapshot = await db.collection("wrongAnswers").doc(wrongAnswersId).get();
-    const wrongAnswersFirebaseInfo = wrongAnswersFirebaseSnapshot[0].data();
-    const wrongAnswersFirebase = wrongAnswersFirebaseInfo.sections[sectionName];
-    return wrongAnswersFirebase;
+    const wrongAnswersFirebaseInfo = wrongAnswersFirebaseSnapshot.docs[0].data();
+    if (wrongAnswersFirebaseInfo.sections[sectionName]){
+        return wrongAnswersFirebaseInfo.sections[sectionName];
+    } else {
+        return [];
+    }
 }
 
 const reportWrongAnsToClass = async (className, materialName, sectionName, wrongAnswers) => {
     const db = firebase.firestore();
     const classInfo = await controller.classes.getClassInfoWithClassName(className);
-    // const wrongAnswersFirebase = classInfo.data.wrongAnswers[materialName][sectionName];
     //query at a different collection
     const wrongAnswersId = classInfo.data.materials[materialName];
     const wrongAnswersFirebase = await getWrongAnswersFirebase(wrongAnswersId);
@@ -55,13 +61,10 @@ const reportWrongAnsToClass = async (className, materialName, sectionName, wrong
     await db.collection("wrongAnswers").doc(wrongAnswersId).update({
         [`sections.${sectionName}`]: wrongAnswersOfficial,
     })
-    // await db.collection("classes").doc(classInfo.id).update({
-    //     [`wrongAnswers.${materialName}.${sectionName}`]: wrongAnswersOfficial,
-    // })
 }
 
 const checkAnswers = async (className, materialInfo, sectionName, answers, userEmail) => {
-    //retrieve data
+    //retrieve data from web
     var keys = [];
     for (let section of materialInfo.data.sections){
         if (section.sectionName == sectionName) {
@@ -91,7 +94,7 @@ const checkAnswers = async (className, materialInfo, sectionName, answers, userE
     const percentage = Math.floor(((keys.length - 1) - wrongTotal) / (keys.length - 1) * 100);
     view.renderPercentage(percentage); 
 
-    //push wrongAnswers to Firebase
+    //push wrongAnswers to users's collection
     const db = firebase.firestore();
     const userInfo = await controller.users.getUserInfoWithEmail(userEmail);
     db.collection("users").doc(userInfo.id).update({
@@ -103,6 +106,7 @@ const checkAnswers = async (className, materialInfo, sectionName, answers, userE
         })
     })
 
+    //save wrongAnswers to class
     await reportWrongAnsToClass (className, materialInfo.data.name, sectionName, wrongAnswers)
 }
 

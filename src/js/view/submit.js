@@ -2,7 +2,6 @@ import "../../css/index.css";
 import "../../tags/submit.tag";
 import controller from "../controller";
 import view from "../view";
-
 import riot from 'riot';
 
 const renderPercentage = (percentage) => {
@@ -25,7 +24,6 @@ const submit = async (userEmail) => {
 
     //mount page
     const submitPage = riot.mount("div#root", "submit", opts);
-
     //add event to header
     view.header();
 

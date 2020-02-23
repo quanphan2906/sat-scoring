@@ -38,7 +38,7 @@
     <div id="material-list-wrapper" class="flex-col">
         <div class="font-24px margin-top-24px" style="align-self: center;">Materials</div>
         <div id="material-list-container" class="flex-row" style="margin-top: 24px;">
-            <div each="{material in opts.materials}" class="border-standard box-shadow-standard fit-content margin-bot-24px" style="margin-left: 48px">
+            <div each="{id, material in opts.materials}" class="border-standard box-shadow-standard fit-content margin-bot-24px" style="margin-left: 48px">
                 <div style="width: 150px; height: 100px; margin: 8px;" class="flex-col">
                     <div class="margin-top-12px font-20px text-center">{material}</div>
                     <button class="submit-answer-btn margin-top-12px" style="margin-left: 4px; padding-right: 4px; padding-left: 8px;" materialName="{material}" className="{opts.name}">Submit answers!</button>
