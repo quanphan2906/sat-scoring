@@ -56,31 +56,19 @@ const overview = async (userEmail) => {
             e.preventDefault();
 
             var studentEmails = createClassForm.emails.value.split(", ");
-            studentEmails = controller.classes.omitSpaceInEmailArray(studentEmails);
-            
-            const students = {
-                data: [],
-                total: studentEmails.length,
-            }
 
-            for (let studentEmail of studentEmails){
-                students.data.push({
-                    name: "",
-                    email: studentEmail,
-                })
-            }
-
-            const classInfo = {
+            const classInfoData = {
                 name: createClassForm.className.value, 
                 schedule: {
                     day: createClassForm.scheduleDay.value,
                     time: createClassForm.scheduleTime.value,
                 },
-                students,
+                students: [],
             }
             
-            const isSuccess = await controller.classes.createClass(classInfo);
-            if (isSuccess){
+            const result = await controller.classes.createClass(classInfoData);
+            if (result.isSuccess){
+                await controller.classes.addStudentToClass(result.classInfo, studentEmails);
                 modal.close();
                 window.location.href = `/classInfoAssistant?className=${classInfo.name}`;
             }

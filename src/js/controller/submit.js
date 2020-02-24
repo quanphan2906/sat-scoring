@@ -28,36 +28,28 @@ const renderData = async (userEmail) => {
     }
 }
 
-const getWrongAnswersFirebase = async (wrongAnswersId) => {
-    const db = firebase.firestore();
-    const wrongAnswersFirebaseSnapshot = await db.collection("wrongAnswers").doc(wrongAnswersId).get();
-    const wrongAnswersFirebaseInfo = wrongAnswersFirebaseSnapshot.docs[0].data();
-    if (wrongAnswersFirebaseInfo.sections[sectionName]){
-        return wrongAnswersFirebaseInfo.sections[sectionName];
-    } else {
-        return [];
-    }
-}
-
 const reportWrongAnsToClass = async (className, materialName, sectionName, wrongAnswers) => {
+    //retrieve existing wrongAnswers
     const db = firebase.firestore();
     const classInfo = await controller.classes.getClassInfoWithClassName(className);
-    //query at a different collection
     const wrongAnswersId = classInfo.data.materials[materialName];
-    const wrongAnswersFirebase = await getWrongAnswersFirebase(wrongAnswersId);
+    const wrongAnswersFirebaseInfo = await controller.wrongAnswers.getWrongAnswersWithId(wrongAnswersId);
+    var wrongAnswersFirebase = [];
+    if (wrongAnswersFirebaseInfo.data.sections[sectionName]){
+        wrongAnswersFirebase = wrongAnswersFirebaseInfo.data.sections[sectionName];
+    }
 
+    //append new wrongAnswers
     var newWrongAnswers = [...wrongAnswers, ...wrongAnswersFirebase]; 
-
     newWrongAnswers = newWrongAnswers.sort((a, b) => {return a - b});
-    console.log("newWrongAnswers", newWrongAnswers);
-
     var wrongAnswersOfficial = [newWrongAnswers[0]];
     for (let i = 1; i < newWrongAnswers.length; i++){
         if (newWrongAnswers[i] != newWrongAnswers[i-1]){
             wrongAnswersOfficial.push(newWrongAnswers[i]);
         }
     }
-    console.log("wrongAnswersOfficial", wrongAnswersOfficial);
+
+    //push to firebase
     await db.collection("wrongAnswers").doc(wrongAnswersId).update({
         [`sections.${sectionName}`]: wrongAnswersOfficial,
     })
@@ -97,6 +89,12 @@ const checkAnswers = async (className, materialInfo, sectionName, answers, userE
     //push wrongAnswers to users's collection
     const db = firebase.firestore();
     const userInfo = await controller.users.getUserInfoWithEmail(userEmail);
+    console.log("object to update to Firebase", {
+        name: `${materialInfo.data.name} - ${sectionName}`,
+        score: percentage,
+        type: materialInfo.data.type,
+        wrongAnswers: wrongAnswers,
+    })
     db.collection("users").doc(userInfo.id).update({
         oldTests: firebase.firestore.FieldValue.arrayUnion({
             name: `${materialInfo.data.name} - ${sectionName}`,
@@ -107,7 +105,9 @@ const checkAnswers = async (className, materialInfo, sectionName, answers, userE
     })
 
     //save wrongAnswers to class
-    await reportWrongAnsToClass (className, materialInfo.data.name, sectionName, wrongAnswers)
+    if (wrongAnswers.length != 0){
+        await reportWrongAnsToClass (className, materialInfo.data.name, sectionName, wrongAnswers)
+    }
 }
 
 const submit = {

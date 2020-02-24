@@ -49,12 +49,21 @@ const deleteAccount = (userEmail) => {
     db.collection(users).where("email", "==", userEmail).delete();
 }
 
+const addClass = async (userEmail, classInfo) => {
+    const db = firebase.firestore();
+    const userInfo = await getUserInfoWithEmail(userEmail);
+    await db.collection("users").doc(userInfo.id).update({
+        classes: firebase.firestore.FieldValue.arrayUnion(classInfo.id)
+    })
+}
+
 const users = {
     userCheckIn,
     assistantCheckIn,
     getUserInfoWithEmail,
     signOut,
     deleteAccount,
+    addClass,
 }
 
 export {

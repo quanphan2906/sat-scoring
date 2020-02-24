@@ -28,61 +28,46 @@ const omitSpaceInEmailArray = (emailArray) => {
     return noSpaceEmailArray;
 }
 
-const createClass = async (classInfo) => {
+const createClass = async (classInfoData) => {
     //check if class has already existed
     const db = firebase.firestore();
-    const classSnapshot = await db.collection("classes").where("name", "==", classInfo.name).get();
+    const classSnapshot = await db.collection("classes").where("name", "==", classInfoData.name).get();
     if (classSnapshot.docs.length == 0){
-        //retrieve names of students
-        var studentsData = [];
-        for (let i = 0; i < classInfo.students.data.length; i++){
-            const email = classInfo.students.data[i].email;
-            const studentSnapshot = await db.collection("users").where("email", "==", email).get();
-            if (studentSnapshot.docs.length != 0){
-                const studentName = studentSnapshot.docs[0].data().name;
-                classInfo.students.data[i].name = studentName;
-                studentsData.push(classInfo.students.data[i]);
-            }
-        }
-
-        classInfo.students.data = studentsData;
-        classInfo.students.total = studentsData.length;
-
         //set data
-        await db.collection("classes").add(classInfo);
-        return true;
+        const classRef = await db.collection("classes").add(classInfoData);
+        return {
+            isSuccess: true,
+            classInfo: {
+                id: classRef.id,
+                data: classInfoData,  
+            },
+        };
     } else{
         view.setMessage("form-error", "Class has already existed");
-        return false;
+        return {
+            isSuccess: false
+        };
     }
 }
 
 const addStudentToClass = async (classInfo, studentEmails) => {
-    var studentData = classInfo.data.students.data;
+    //prepare two arrays of emails
     studentEmails =  omitSpaceInEmailArray(studentEmails);
     var nonExistEmails = [];
 
+    const db = firebase.firestore();
+
     for (let studentEmail of studentEmails){
         const userInfo = await controller.users.getUserInfoWithEmail(studentEmail);
-        if (userInfo != undefined){    
-            studentData.push({
-                email: studentEmail,
-                name: userInfo.data.name,
-            });
+        if (userInfo != undefined){
+            await db.collection("classes").doc(classInfo.id).update({
+                students: firebase.firestore.FieldValue.arrayUnion(userInfo.id),
+            })
+            await controller.users.addClass(userInfo.data.email, classInfo);
         } else{
             nonExistEmails.push(studentEmail);
         }
     }
-    
-    const studentTotal = classInfo.data.students.total + 1;
-
-    const db = firebase.firestore();
-    db.collection("classes").doc(classInfo.id).update({
-        students: {
-            data: studentData,
-            total: studentTotal,
-        }
-    })
 
     if (nonExistEmails == 0){
         return {
@@ -110,13 +95,18 @@ const removeStudentFromClass = async (classInfo, studentEmail) => {
     await db.collection("classes").doc(classInfo.id).update({
         students: {
             data: studentData,
-            total: classInfo.data.students.total - 1,
+            total: classInfo.data.students.total - 1, //TODO: DATA STRUCTURE HAS CHANGED
         }
     })
 }
 
 const deleteClass = async (classInfo) => {
     const db = firebase.firestore();
+    for (let studentId of classInfo.students){
+        db.collection("users").doc(studentId).update({
+            classes: firebase.firestore.FieldValue.arrayRemove(classInfo.data.name),
+        })
+    }
     await db.collection("classes").doc(classInfo.id).delete();
 }
 

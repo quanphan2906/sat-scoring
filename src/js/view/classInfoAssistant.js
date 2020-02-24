@@ -20,6 +20,29 @@ const classInfoAssistant = async (userEmail) => {
     //mount page
     const classInfoAssistantPage = riot.mount("div#root", "classinfoassistant", opts);
 
+    //add wrongAnswers of sections of each material
+    const sectionContainers = document.getElementsByClassName("sections-container");
+    var i = 0;
+    if (classInfo.data.materials != undefined && classInfo.data.materials != null){
+        for (let wrongAnswersId of Object.values(classInfo.data.materials)){
+            const wrongAnswersInfo = await controller.wrongAnswers.getWrongAnswersWithId(wrongAnswersId);
+            if (wrongAnswersInfo.data.sections != {}){
+                for (let section of Object.entries(wrongAnswersInfo.data.sections)){
+                    sectionContainers[i].innerHTML = `
+                        <b>${section[0]}</b> 
+                        <span class="margin-left-12px"></span>
+                    `;
+                    for (let wrongAnswer of section[1]){
+                        const wrongAnswerContainer = document.createElement("span");
+                        wrongAnswerContainer.innerText = `${wrongAnswer}, `;
+                        sectionContainers[i].appendChild(wrongAnswerContainer);
+                    }
+                }
+                i++;
+            }
+        }
+    }
+
     //add event to header
     view.header();
 
@@ -127,7 +150,7 @@ const classInfoAssistant = async (userEmail) => {
     }
 
     
-    //create delete modal
+    //delete class
     const deleteClassModal = initModal(document.getElementById("delete-class-modal"));
     //add event to delete button
     document.getElementById("delete-class-btn").addEventListener("click", async (e) => {
