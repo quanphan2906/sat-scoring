@@ -1,12 +1,19 @@
 <classinfoassistant>
-    <div id="class-info-header" class="flex-row border-standard" style="margin-bottom: 48px;">
+    <div class="flex-row border-standard" style="margin-bottom: 48px;">
         <div class="margin-top-12px" style="margin-left: 144px; margin-bottom: 8px">
             <div class="font-Pacifico font-20px">Thầy Julius</div>
             <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 360px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">
-            <div id="email" style="margin-top: 12px;">{opts.userEmail}</div>
+            <div class="dropdown">
+                <div id="email" class="drop-title" style="margin-top: 12px;">{opts.userEmail}</div>
+                <div class="dropdown-content">
+                    <a href="/upload">Upload materials</a>
+                    <a href="/materials">Materials page</a>
+                    <a href="/overview">Overview</a>
+                </div>
+            </div>
             <button id="sign-out" class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
         </div>
     </div>
@@ -25,11 +32,11 @@
 
         <div id="class-list-wrapper" style="margin-left: 54px;" class="flex-col">
             <div id="student-list-container" style="margin-top: 48px; width: inherit;" class="flex-row">
-                <div each="{student in opts.students.data}" class="student-wrapper border-standard fit-content margin-left-12px margin-bot-12px">
+                <div each="{student in opts.students}" class="student-wrapper border-standard fit-content margin-left-12px margin-bot-12px">
                     <div class="student-container fit-content" style="margin: 8px;">
-                        <div class="fit-content font-20px">{student.name}</div>
-                        <div class="fit-content margin-top-12px"><b>Email</b> {student.email}</div>
-                        <button class="remove-student-from-class fit-content margin-top-12px bg-color-danger color-white fit-content" studentEmail="{student.email}">Remove this student</button>
+                        <div class="fit-content font-20px">{student.data.name}</div>
+                        <div class="fit-content margin-top-12px"><b>Email</b> {student.data.email}</div>
+                        <button class="remove-student-from-class fit-content margin-top-12px bg-color-danger color-white fit-content" studentEmail="{student.data.email}" studentId="{student.id}">Remove this student</button>
                     </div>
                 </div>
             </div>

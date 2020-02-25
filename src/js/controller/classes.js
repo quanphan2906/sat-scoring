@@ -8,8 +8,7 @@ const getClassInfoWithClassName = async (className) => {
     const classInfo = {
         id: classSnapshot.docs[0].id,
         data: classSnapshot.docs[0].data(),
-    }
-        
+    }        
     return classInfo;
 }
 
@@ -63,7 +62,6 @@ const addStudentToClass = async (classInfo, studentEmails) => {
             await db.collection("classes").doc(classInfo.id).update({
                 students: firebase.firestore.FieldValue.arrayUnion(userInfo.id),
             })
-            await controller.users.addClass(userInfo.data.email, classInfo);
         } else{
             nonExistEmails.push(studentEmail);
         }
@@ -82,27 +80,19 @@ const addStudentToClass = async (classInfo, studentEmails) => {
 }
 
 
-const removeStudentFromClass = async (classInfo, studentEmail) => {
+const removeStudentFromClass = async (classInfo, studentId) => {
     const db = firebase.firestore();
-    const studentData = classInfo.data.students.data;
-    for (let i = 0; i < studentData.length; i++){
-        if (studentData[i].email == studentEmail){
-            studentData.splice(i, 1);
-            break;
-        }
-    }
-
     await db.collection("classes").doc(classInfo.id).update({
-        students: {
-            data: studentData,
-            total: classInfo.data.students.total - 1, //TODO: DATA STRUCTURE HAS CHANGED
-        }
+        students: firebase.firestore.FieldValue.arrayRemove(studentId),
     })
 }
 
 const deleteClass = async (classInfo) => {
     const db = firebase.firestore();
-    for (let studentId of classInfo.students){
+    for await (let wrongAnswersId of Object.values(classInfo.data.materials)){
+        db.collection("wrongAnswers").doc(wrongAnswersId).delete();
+    }
+    for (let studentId of classInfo.data.students){
         db.collection("users").doc(studentId).update({
             classes: firebase.firestore.FieldValue.arrayRemove(classInfo.data.name),
         })
@@ -116,30 +106,24 @@ const addMaterialToClass = async (classInfo, materialName) => {
     const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialName);
     if (materialInfo != undefined){
         //create place to store wrong answers of class's material
-        const wrongAnswersRef = await db.collection("wrongAnswers").add({
-            materialName: materialName,
-            sections: {},
-        })
+        const wrongAnswersRef = await db.collection("wrongAnswers").add({})
         
         await db.collection("classes").doc(classId).update({
             [`materials.${materialName}`]: wrongAnswersRef.id,
         })
 
-        return {
-            undefinedMaterial: false,
-        }
-    }
-    else{
-        return {
-            undefinedMaterial: true,
-        }
+        return {undefinedMaterial: false,}
+    } else{
+        return {undefinedMaterial: true,}
     }
 }
 
 const deleteMaterialFromClass = async(classInfo, materialName) => {
     const db = firebase.firestore();
+    const wrongAnswersId = classInfo.data.materials[materialName];
+    await db.collection("wrongAnswers").doc(wrongAnswersId).delete();
     await db.collection("classes").doc(classInfo.id).update({
-        materials: firebase.firestore.FieldValue.arrayRemove(materialName),
+        [`materials.${materialName}`]: firebase.firestore.FieldValue.delete(),
     })
 }
 

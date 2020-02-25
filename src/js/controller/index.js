@@ -7,6 +7,7 @@ import {query} from "./query.js";
 import {submit} from "./submit.js";
 import {users} from "./users.js";
 import {wrongAnswers} from "./wrongAnswers.js";
+import {getWithId} from "./getWithId.js";
 
 
 export default {
@@ -19,4 +20,5 @@ export default {
     submit,
     users,
     wrongAnswers,
+    getWithId,
 }

@@ -6,7 +6,14 @@
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 360px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">
-            <div id="email" style="margin-top: 12px;">{opts.userEmail}</div>
+            <div class="dropdown">
+                <div id="email" class="drop-title" style="margin-top: 12px;">{opts.userEmail}</div>
+                <div class="dropdown-content">
+                    <a href="/upload">Upload materials</a>
+                    <a href="/materials">Materials page</a>
+                    <a href="/overview">Overview</a>
+                </div>
+            </div>
             <button class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
         </div>
     </div>

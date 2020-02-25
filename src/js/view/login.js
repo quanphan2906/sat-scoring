@@ -8,6 +8,11 @@ const login = () => {
     //mount page
     const login = riot.mount("div#root", "signin");
 
+    //redirect to sign up
+    document.getElementById("to-signup-page").addEventListener("click", (e) => {
+        window.location.href = "/signup";
+    })
+
     //control login
     const loginForm = document.getElementById("login-form");
     loginForm.addEventListener("submit", async (e) => {

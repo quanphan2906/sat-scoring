@@ -1,12 +1,19 @@
 <overview>
-    <div id="submit-header" class="flex-row border-standard">
+    <div class="flex-row border-standard">
         <div class="margin-top-12px" style="margin-left: 144px; margin-bottom: 8px">
             <div class="font-Pacifico font-20px">Thầy Julius</div>
             <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 360px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">
-            <div id="email" style="margin-top: 12px;">{opts.userEmail}</div>
+            <div class="dropdown">
+                <div id="email" class="drop-title" style="margin-top: 12px;">{opts.userEmail}</div>
+                <div class="dropdown-content">
+                    <a href="/upload">Upload materials</a>
+                    <a href="/materials">Materials page</a>
+                    <a href="/overview">Overview</a>
+                </div>
+            </div>
             <button id="sign-out" class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
         </div>
     </div>
@@ -22,7 +29,6 @@
         <div class="line-straight" style="margin-left: 54px;"></div>
 
         <div id="class-list-wrapper" style="margin-left: 54px;" class="flex-col">
-            <input type="text" placeholder="Search" class="center" style="margin-left: 300px; width: 220px;">
             <div id="class-list-container" style="margin-top: 48px; width: inherit;" class="flex-row">
                 <div each="{class in opts.classesInfo}" id="class-wrapper" class="border-standard fit-content margin-left-12px margin-bot-12px">
                     <div id="class-container" class="fit-content" style="margin: 8px;">

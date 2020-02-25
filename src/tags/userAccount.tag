@@ -6,7 +6,12 @@
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 400px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">
-            <div id="email" style="margin-top: 12px;">{opts.data.email}</div>
+            <div class="dropdown">
+                <div id="email" class="drop-title" style="margin-top: 12px;">{opts.userEmail}</div>
+                <div class="dropdown-content">
+                    <a href="/userAccount">Account Information</a>
+                </div>
+            </div>
             <button id="sign-out" class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
         </div>
     </div>
@@ -17,21 +22,24 @@
             <div class="flex-col" style="margin-top: 8px;">
                 <div class="font-16px"><b>Classes</b></div>
                 <div class="flex-row" style="flex-wrap: wrap; margin-top: 4px;">
-                    <button class="class-name" each="{class in opts.data.classes}" style="margin-left: 8px;">{class}</button>
+                    <button class="class-name" each="{class in opts.classNamesFirebase}" style="margin-left: 8px;">{class}</button>
                 </div>
             </div>
             <button id="delete-btn" class="margin-top-24px center bg-color-danger color-white" style="width: 164px;">Delete account</button>
         </div>
-        <img src="../assets/img-placeholder.jpg" alt="" width="300px; height: 300px;" id="process-img">
+        <div style = "width: 800px; height: 400px">
+            <canvas id="result-chart" width="100" height="100"></canvas>
+        </div>
+
     </div>
 
     <div class="line" style="margin-top: 24px;"></div>
 
     <div id="old-test-wrapper" style="width: 100%;" class="flex-col">
         <div class="margin-top-24px font-20px" style="align-self: center;">Review</div>
-        <div each="{test in opts.data.oldTests}" class="border-standard center margin-top-24px" style="width: 50%;">
+        <div each="{test in opts.data.oldTests}" class="border-standard center margin-top-24px" style="width: 70%;">
             <div class="old-test-container flex-row fit-content" style="flex-wrap: nowrap;">
-                <img src="../assets/img-placeholder.jpg" alt="" width="100px" height="100px" style="margin: 12px;">
+                <div><img class="material-imgs" testName="{test.name}" src="../assets/img-placeholder.jpg" width="100px" height="100px" style="margin: 12px;"></div>
                 <div class="flex-col" style="margin: 12px;">
                     <div class="font-16px">{test.name}</div>
                     <div class="font-12px"><i>Type: {test.type}</i></div>

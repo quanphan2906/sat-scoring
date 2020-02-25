@@ -1,15 +1,20 @@
 import "../../css/index.css";
 import "../../tags/userAccount.tag";
-import {initModal} from '../../mx';
 import riot from 'riot';
+import Chart from "chart.js";
 import view from "../view";
+import {initModal} from '../../mx';
 import controller from "../controller";
 
 const userAccount = async (userEmail) => {
     //get personal information
     const userInfo = await controller.users.getUserInfoWithEmail(userEmail);
+    const classNamesFirebase = await controller.users.retrieveClassesOfUser(userInfo.id);
+
     const opts = {
         ...userInfo,
+        classNamesFirebase,
+        userEmail,
     }
 
     //mount page
@@ -17,6 +22,49 @@ const userAccount = async (userEmail) => {
     
     //add event to header
     view.header();
+
+    //chart
+    const scores = userInfo.data.oldTests.map((oldTest) => {
+        return oldTest.score;
+    })
+    const oldTestNames = userInfo.data.oldTests.map((oldTest) => {
+        return oldTest.name;
+    }) 
+    const resultChartContainer = document.getElementById("result-chart");
+    const ctx = resultChartContainer.getContext("2d");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: oldTestNames,
+            datasets: [{
+                label: 'Scores of exercises',
+                data: scores,
+                borderColor: 'rgba(3, 132, 252, 1)',
+                borderWidth: 1,
+                backgroundColor: "rgba(0, 191, 255, 0.2)"
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        max: 100,
+                    }
+                }]
+            }
+        }
+    });
+
+    
+    //render materials' images
+    const materialImgs = document.getElementsByClassName("material-imgs");
+    for (let img of materialImgs){
+        const materialName = img.getAttribute("testName").split(" -")[0];
+        const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialName);
+        img.setAttribute("src", materialInfo.data.fileUrls);
+    }
 
     //redirect to classes
     const classNames = document.getElementsByClassName("class-name");

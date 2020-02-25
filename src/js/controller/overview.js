@@ -6,7 +6,7 @@ const renderData = async () => {
     const db = firebase.firestore();
         //student number
     const studentSnapshot = await db.collection("users").get();
-    const studentsTotal = studentSnapshot.docs.length;
+    const studentsTotal = studentSnapshot.docs.length - 1; //since there is one mail of assistant
         //classes info
     const classesSnapshot = await db.collection("classes").get();
     const classesTotal = classesSnapshot.docs.length;

@@ -5,8 +5,8 @@
             <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
         </div>
         <div class="margin-top-12px" style="margin-left: 450px; margin-bottom: 8px">
-            <button>Log in</button>
-            <button class="margin-left-24px">Sign up</button>
+            <button id="to-login-page">Log in</button>
+            <button id="to-signup-page" class="margin-left-24px">Sign up</button>
         </div>
     </div>
 

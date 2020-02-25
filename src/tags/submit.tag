@@ -6,7 +6,12 @@
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 400px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">
-            <div id="email" style="margin-top: 12px;">{opts.userEmail}</div>
+            <div class="dropdown">
+                <div id="email" class="drop-title" style="margin-top: 12px;">{opts.userEmail}</div>
+                <div class="dropdown-content">
+                    <a href="/userAccount">Account Information</a>
+                </div>
+            </div>
             <button id="sign-out" class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
         </div>
     </div>
@@ -20,11 +25,11 @@
                 <button value="" each="{section in opts.sections}" class="section-option margin-left-12px margin-top-12px">{section.sectionName}</button>
             </div>
             <div id="result" class="font-20px margin-top-24px text-center">
-                Your result: N/A
+                Your result: 0%
             </div>
         </div>
         <div>
-            <img src="../assets/img-placeholder.jpg" alt="" width="300px" height="300px">
+            <img src="{opts.fileUrls}" alt="" width="300px" height="300px">
         </div>
     </div>
 
@@ -35,7 +40,7 @@
         <div id="answers-list" class="flex-row center margin-top-12px text-center"></div>
     </div>
 
-    <div class="flex-center margin-top-24px">
+    <div class="flex-center margin-top-24px margin-bot-24px">
         <button id="check-btn" class="center btn-primary">Let's check</button>
     </div>
 </submit>

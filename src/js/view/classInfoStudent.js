@@ -10,11 +10,17 @@ const classInfoStudent = async (userEmail) => {
     const queryResult = controller.query();
     const classNameQuery = queryResult.className;
     const classInfo = await controller.classes.getClassInfoWithClassName(classNameQuery);
+    var students = [];
+    for (let id of classInfo.data.students){
+        const studentInfo = await controller.getWithId("users", id);
+        students.push(studentInfo);
+    }
 
     //opts
     const opts = {
         ...classInfo.data,
-        userEmail
+        userEmail,
+        students,
     }
 
     //mount page

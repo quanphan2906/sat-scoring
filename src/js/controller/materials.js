@@ -134,7 +134,7 @@ const deleteSection = async (materialInfo, sectionName) => {
     await db.collection("materials").doc(materialInfo.id).update({
         sections: sectionsData,
     })
-}
+} //TODO: delete section = delete answer keys of it, not deleteing it literrally
 
 const addSection = async (materialInfo, section) => {
     const db = firebase.firestore();

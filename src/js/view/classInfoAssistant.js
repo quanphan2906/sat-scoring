@@ -10,10 +10,16 @@ const classInfoAssistant = async (userEmail) => {
     const queryResult = controller.query();
     const classNameQuery = queryResult.className;
     const classInfo = await controller.classes.getClassInfoWithClassName(classNameQuery);
+    var students = [];
+    for (let id of classInfo.data.students){
+        const studentInfo = await controller.getWithId("users", id);
+        students.push(studentInfo);
+    }
 
     //opts
     const opts = {
         ...classInfo.data,
+        students,
         userEmail
     }
 
@@ -25,14 +31,14 @@ const classInfoAssistant = async (userEmail) => {
     var i = 0;
     if (classInfo.data.materials != undefined && classInfo.data.materials != null){
         for (let wrongAnswersId of Object.values(classInfo.data.materials)){
-            const wrongAnswersInfo = await controller.wrongAnswers.getWrongAnswersWithId(wrongAnswersId);
-            if (wrongAnswersInfo.data.sections != {}){
-                for (let section of Object.entries(wrongAnswersInfo.data.sections)){
+            const wrongAnswersInfo = await controller.wrongAnswers.getWrongAnswersWithId(wrongAnswersId);          
+            if (wrongAnswersInfo != undefined){    
+                for (let [sectionName, wrongAnswers] of Object.entries(wrongAnswersInfo.data)){
                     sectionContainers[i].innerHTML = `
-                        <b>${section[0]}</b> 
+                        <b>${sectionName}</b> 
                         <span class="margin-left-12px"></span>
                     `;
-                    for (let wrongAnswer of section[1]){
+                    for (let wrongAnswer of wrongAnswers){
                         const wrongAnswerContainer = document.createElement("span");
                         wrongAnswerContainer.innerText = `${wrongAnswer}, `;
                         sectionContainers[i].appendChild(wrongAnswerContainer);
@@ -84,12 +90,13 @@ const classInfoAssistant = async (userEmail) => {
     const removeStudentButtons = document.getElementsByClassName("remove-student-from-class");
     for (let removeStudentButton of removeStudentButtons){
         var studentEmail = "";
+        var studentId = "";
         removeStudentButton.addEventListener("click", (e) => {
             removeStudentModal.open();
 
-            studentEmail = e.target.getAttribute("studentEmail")
+            studentEmail = e.target.getAttribute("studentEmail");
+            studentId = e.target.getAttribute("studentId");
             document.getElementById("student-email-container").innerText = studentEmail;
-            
         })
 
         //confirm and unconfirm delete account btn
@@ -102,7 +109,7 @@ const classInfoAssistant = async (userEmail) => {
         document.getElementById("confirm-remove-student-btn").addEventListener("click", async (e) => {
             e.preventDefault();
             
-            await controller.classes.removeStudentFromClass(classInfo, studentEmail);
+            await controller.classes.removeStudentFromClass(classInfo, studentId);
             location.reload();
         })
     }

@@ -57,6 +57,15 @@ const addClass = async (userEmail, classInfo) => {
     })
 }
 
+const retrieveClassesOfUser = async(userId) => {
+    const db = firebase.firestore();
+    const classesSnapshot = await db.collection("classes").where("students", "array-contains", userId).get();
+    const classNames = classesSnapshot.docs.map((doc) => {
+        return doc.data().name
+    })
+    return classNames;
+}
+
 const users = {
     userCheckIn,
     assistantCheckIn,
@@ -64,6 +73,7 @@ const users = {
     signOut,
     deleteAccount,
     addClass,
+    retrieveClassesOfUser,
 }
 
 export {
