@@ -232,4 +232,8 @@
 
 .dropdown:hover .dropdown-content {display: block;}
 
+.pointer{
+    cursor: pointer;
+}
+
 

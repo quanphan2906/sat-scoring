@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import "firebase/firestore";
 import controller from "../controller";
+import view from "../view";
 
 const getClassInfoWithClassName = async (className) => {
     const db = firebase.firestore();
@@ -28,24 +29,37 @@ const omitSpaceInEmailArray = (emailArray) => {
 }
 
 const createClass = async (classInfoData) => {
-    //check if class has already existed
-    const db = firebase.firestore();
-    const classSnapshot = await db.collection("classes").where("name", "==", classInfoData.name).get();
-    if (classSnapshot.docs.length == 0){
-        //set data
-        const classRef = await db.collection("classes").add(classInfoData);
-        return {
-            isSuccess: true,
-            classInfo: {
-                id: classRef.id,
-                data: classInfoData,  
-            },
-        };
-    } else{
-        view.setMessage("form-error", "Class has already existed");
-        return {
-            isSuccess: false
-        };
+    //check if data is available
+    if (!classInfoData.name){
+        view.setMessage("className-error", "Please input name of class")
+    }
+    if (!classInfoData.schedule.day){
+        view.setMessage("scheduleDay-error", "Please input learning day")
+    }
+    if (!classInfoData.schedule.time){
+        view.setMessage("scheduleTime-error", "Please input learning time")
+    }
+
+    if (classInfoData.name && classInfoData.schedule.day && classInfoData.schedule.time){
+        //check if class has already existed
+        const db = firebase.firestore();
+        const classSnapshot = await db.collection("classes").where("name", "==", classInfoData.name).get();
+        if (classSnapshot.docs.length == 0){
+            //set data
+            const classRef = await db.collection("classes").add(classInfoData);
+            return {
+                isSuccess: true,
+                classInfo: {
+                    id: classRef.id,
+                    data: classInfoData,  
+                },
+            };
+        } else{
+            view.setMessage("form-error", "Class has already existed");
+            return {
+                isSuccess: false
+            };
+        }
     }
 }
 
@@ -89,8 +103,10 @@ const removeStudentFromClass = async (classInfo, studentId) => {
 
 const deleteClass = async (classInfo) => {
     const db = firebase.firestore();
-    for await (let wrongAnswersId of Object.values(classInfo.data.materials)){
-        db.collection("wrongAnswers").doc(wrongAnswersId).delete();
+    if (classInfo.data.materials != undefined){
+        for await (let wrongAnswersId of Object.values(classInfo.data.materials)){
+            db.collection("wrongAnswers").doc(wrongAnswersId).delete();
+        }
     }
     for (let studentId of classInfo.data.students){
         db.collection("users").doc(studentId).update({

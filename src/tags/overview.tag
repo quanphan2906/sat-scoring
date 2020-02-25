@@ -47,12 +47,19 @@
             <div id="modal-container" style="margin: 12px;" class="fit-content">
                 <form id="create-class-form" action="" class="flex-col">
                     <div class="font-20px margin-bot-24px">Let's create a class!</div>
-                    <input name="className" type="text" placeholder="Class's name (Ex: J071)" style="width: 400px;">
-                    <div class="flex-row">
-                        <input name="scheduleDay" type="text" placeholder="Learning day (Ex: 246)">
-                        <input name="scheduleTime" type="text" placeholder="Learning time (Ex: 8.30pm)">
-                    </div>
-                    <input name="emails" type="text" placeholder="Students' accounts (ex: billgates@gmail.com)" multiple>
+                    <input name="className" type="text" placeholder="Class's name (Ex: J071)" style="width: 400px; margin-bottom: 0px;">
+                    <div id="className-error" style="margin: 4px 0px 12px 1px" class="form-error fit-content"></div>
+
+                    <input name="scheduleDay" type="text" placeholder="Learning day (Ex: 246)" style="margin-bottom: 0px;">
+                    <div id="scheduleDay-error" style="margin: 4px 0px 12px 1px" class="form-error fit-content"></div>
+
+                    <input name="scheduleTime" type="text" placeholder="Learning time (Ex: 8.30pm)" style="margin-bottom: 0px;">
+                    <div id="scheduleTime-error" style="margin: 4px 0px 12px 1px" class="form-error fit-content"></div>
+
+                    
+                    <div class="fit-content" style="margin-bottom: 4px;"><i class="font-12px opacity-50">Emails MUST be separated by COMMAS (,)</i></div>
+                    <input name="emails" type="text" placeholder="Students' emails (ex: billgates@gmail.com)" multiple>
+
                     <button class="btn-primary">Create class</button>
                     <button id="unconfirm-delete-class-btn" class="btn-primary color-black">Nah! Maybe later</button>
                     <div id="form-error" class="form-error margin-top-12px margin-bot-24px">

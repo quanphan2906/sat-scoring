@@ -1,6 +1,7 @@
 import {classes} from "./classes.js";
 import {firebaseInit} from "./initializeFirebase.js";
 import {login} from "./login.js";
+import {signup} from "./signup.js";
 import {materials} from "./materials.js";
 import {overview} from "./overview.js";
 import {query} from "./query.js";
@@ -14,6 +15,7 @@ export default {
     classes,
     firebaseInit,
     login,
+    signup,
     materials,
     overview,
     query,

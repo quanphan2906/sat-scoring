@@ -13,7 +13,7 @@ const login = () => {
         window.location.href = "/signup";
     })
 
-    //control login
+    //fetch data to controller
     const loginForm = document.getElementById("login-form");
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();

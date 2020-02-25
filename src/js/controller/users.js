@@ -2,6 +2,16 @@ import firebase from "firebase";
 import "firebase/firestore";
 import controller from "../controller";
 
+const createUserDatabase = async (registerInfo) => {
+    const db = firebase.firestore();
+    await db.collection("users").add({
+        email: registerInfo.email,
+        isAssistant: false,
+        name: `${registerInfo.firstName} ${registerInfo.lastName}`,
+        password: registerInfo.password,
+    })
+}
+
 const userCheckIn = (viewFunction) => {
     firebase.auth().onAuthStateChanged((user) => {
         if (user){
@@ -44,9 +54,16 @@ const getUserInfoWithEmail = async (userEmail) => {
 
 const signOut = () => {firebase.auth().signOut()}
 
-const deleteAccount = (userEmail) => {
+const deleteAccount = async (userEmail) => {
     const db = firebase.firestore();
-    db.collection(users).where("email", "==", userEmail).delete();
+    firebase.auth().onAuthStateChanged( async (user) => {
+        if (user) {
+            await user.delete();
+            db.collection(users).where("email", "==", userEmail).delete();
+        } else {
+            window.location.href = "/signin";
+        }
+    })
 }
 
 const addClass = async (userEmail, classInfo) => {
@@ -67,6 +84,7 @@ const retrieveClassesOfUser = async(userId) => {
 }
 
 const users = {
+    createUserDatabase,
     userCheckIn,
     assistantCheckIn,
     getUserInfoWithEmail,
