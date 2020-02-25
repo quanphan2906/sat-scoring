@@ -14,7 +14,7 @@
                     <a href="/overview">Overview</a>
                 </div>
             </div>
-            <button class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
+            <button id="sign-out" class="margin-left-24px" style="margin-top: 4px;">Sign out</button>
         </div>
     </div>
 
@@ -29,26 +29,26 @@
             <button id="upload-btn" class="btn-primary margin-bot-24px">Upload materials</button>
             <div class="line" style="margin-bottom: 24px;"></div>
             <div class="font-20px margin-bot-24px">Choose a type</div>
-            <div class="border-standard box-shadow-standard fit-content margin-bot-24px">
-                <div class="fit-content" style="margin: 8px;">
+            <div class="border-standard box-shadow-standard fit-content margin-bot-24px flex-row">
+                <div class="fit-content pointer" style="margin: 8px;">
                     <img src="../assets/reading.jpg" alt="" class="sections-img">
-                    <div class="material-type margin-top-12px font-16px text-center">Reading</div>
+                    <div class="material-type margin-top-12px font-16px center text-center fit-content">Reading</div>
                 </div>
             </div>
             <div class="border-standard box-shadow-standard fit-content margin-bot-24px">            
-                <div class="fit-content" style="margin: 8px;">
+                <div class="fit-content pointer" style="margin: 8px;">
                     <img src="../assets/writing.jpg" alt="" class="sections-img">
                     <div class="material-type margin-top-12px font-16px text-center">Writing</div>
                 </div>
             </div>
             <div class="border-standard box-shadow-standard fit-content margin-bot-24px">
-                <div class="fit-content" style="margin: 8px;">
+                <div class="fit-content pointer" style="margin: 8px;">
                     <img src="../assets/maths.jpg" alt="" class="sections-img">
                     <div class="material-type margin-top-12px font-16px text-center">Maths</div>
                 </div>
             </div>
-            <div class="border-standard box-shadow-standard fit-content margin-bot-24px">
-                <div class="fit-content" style="margin: 8px;">
+            <div class="border-standard box-shadow-standard fit-content margin-bot-24px border-right">
+                <div class="fit-content pointer" style="margin: 8px;">
                     <img src="../assets/practice tests.jpg" alt="" class="sections-img">
                     <div class="material-type margin-top-12px font-16px text-center">Pratice tests</div>
                 </div>
@@ -62,6 +62,9 @@
                 <input id="search-bar" type="text" placeholder="Search" class="center" style="margin-left: 300px; width: 220px; margin-right: 0px;">
                 <button id="search-bar-btn" class="btn-primary center" style="width: fit-content; margin-left: 12px;">Go</button>
             </div>
+            
+            <div id="loader"></div>
+            
             <div id="material-list-container" style="width: inherit;" class="flex-row margin-top-24px">
                 <div each="{material in opts.materialsWithType}" class="border-standard box-shadow-standard fit-content margin-top-24px" style="margin-left: 24px">
                     <div style="width: 150px; height: 100px; margin: 8px;" class="flex-col">

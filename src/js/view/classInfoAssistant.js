@@ -26,6 +26,14 @@ const classInfoAssistant = async (userEmail) => {
     //mount page
     const classInfoAssistantPage = riot.mount("div#root", "classinfoassistant", opts);
 
+    //render materials' images
+    const materialImgs = document.getElementsByClassName("material-imgs");
+    for (let img of materialImgs){
+        const materialName = img.getAttribute("testName");
+        const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialName);
+        img.setAttribute("src", materialInfo.data.fileUrls);
+    }
+
     //add wrongAnswers of sections of each material
     const sectionContainers = document.getElementsByClassName("sections-container");
     var i = 0;

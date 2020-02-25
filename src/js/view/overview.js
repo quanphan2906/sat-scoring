@@ -70,7 +70,7 @@ const overview = async (userEmail) => {
             if (result.isSuccess){
                 await controller.classes.addStudentToClass(result.classInfo, studentEmails);
                 modal.close();
-                window.location.href = `/classInfoAssistant?className=${classInfo.name}`;
+                window.location.href = `/classInfoAssistant?className=${classInfoData.name}`;
             }
         })
     })

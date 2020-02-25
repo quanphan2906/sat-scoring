@@ -3,3 +3,8 @@
     height: 320px;
     margin-left: 100px;
 }
+
+#keys-list-wrapper{
+    position: relative;
+    width: 100%;
+}

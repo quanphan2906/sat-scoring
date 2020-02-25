@@ -23,7 +23,7 @@
         <div id="overview-wrapper" style="margin-left: 96px;" class="flex-col">
             <div class="font-24px">{opts.name}</div>
             <div class="margin-bot-24px"><i class="font-18px">{opts.schedule.day} {opts.schedule.time}</i></div>
-            <div class="margin-top-12px font-14px"><b>Current number of students</b> {opts.students.total} </div>
+            <div class="margin-top-12px font-14px"><b>Current number of students</b> {opts.students.length} </div>
             <button id="add-student-btn" class="bg-color-warning color-white color-black margin-top-24px">Add student</button>
             <button id="delete-class-btn" class="bg-color-danger color-white" style="margin: 8px;">Delete class</button>
         </div>
@@ -51,7 +51,9 @@
 
             <div each="{wrongAnswersId, materialName in opts.materials}" class="border-standard box-shadow-standard fit-content margin-bot-24px center" style="margin-left: 48px; width: 50%;">
                 <div class="old-test-container flex-row fit-content" style="flex-wrap: nowrap;">
-                    <img src="../assets/img-placeholder.jpg" alt="" width="100px" height="100px" style="margin: 12px;">
+                    <div>
+                        <img class="material-imgs" testName="{materialName}" src="" alt="" width="100px" height="100px" style="margin: 12px;"> 
+                    </div>
                     <div class="flex-col" style="margin: 12px;">
                         <div class="font-16px">{materialName}</div>
                         <div class="sections-container"></div>

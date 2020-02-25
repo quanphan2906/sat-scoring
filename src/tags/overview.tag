@@ -58,7 +58,7 @@
 
                     
                     <div class="fit-content" style="margin-bottom: 4px;"><i class="font-12px opacity-50">Emails MUST be separated by COMMAS (,)</i></div>
-                    <input name="emails" type="text" placeholder="Students' emails (ex: billgates@gmail.com)" multiple>
+                    <input name="emails" type="text" placeholder="Students' emails (ex: billgates@gmail.com)" style="margin-bottom: 24px;" multiple>
 
                     <button class="btn-primary">Create class</button>
                     <button id="unconfirm-delete-class-btn" class="btn-primary color-black">Nah! Maybe later</button>

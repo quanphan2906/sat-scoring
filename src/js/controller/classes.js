@@ -60,6 +60,10 @@ const createClass = async (classInfoData) => {
                 isSuccess: false
             };
         }
+    } else {
+        return {
+            isSuccess: false
+        };
     }
 }
 

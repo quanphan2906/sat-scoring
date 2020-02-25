@@ -99,9 +99,11 @@ const upload = (userEmail) => {
     //add key containers
     const keyList = document.getElementById("keys-list-container");
     const keyTotalEle = document.getElementById("key-total");
+    var keyTotal = 0;
     keyTotalEle.setAttribute("size", keyTotalEle.getAttribute("placeholder").length);
-    keyTotalEle.addEventListener("change", (e) => {
-        const keyTotal = e.target.value;
+    document.getElementById("generate-input").addEventListener("click", (e) => {
+        keyTotal = keyTotalEle.value;
+        keyList.innerHTML = "";
         for (var i = 0; i < keyTotal; i++){
             keyList.innerHTML += `
             <div id="key-item" class="margin-left-12px flex-row" style="flex-wrap: nowrap;">
@@ -113,8 +115,16 @@ const upload = (userEmail) => {
         };
     })
 
+    //renew input area if setion option changes
+    sectionOption.addEventListener("change", (e) => {
+        keyTotalEle.value = "";
+        keyList.innerHTML = "";
+        view.setMessage("form-success", "")
+    })
+
     //start uploading
     const uploadButton = document.getElementById("upload-btn");
+    const uploadContainer = document.getElementById("upload-container");
     uploadButton.addEventListener("click", async (e) => {
         const files = [];
         document.querySelectorAll("input[type=file]").forEach( (ele) => {
@@ -126,7 +136,9 @@ const upload = (userEmail) => {
         var answers = [null];
         const answerEles = document.getElementsByClassName("key");
         for (let answerEle of answerEles){
-            answers.push(answerEle.value.toLowerCase());
+            if (answerEle.value.toLowerCase() != ""){
+                answers.push(answerEle.value.toLowerCase());
+            }
         }
 
         const section = {
@@ -135,17 +147,25 @@ const upload = (userEmail) => {
         };
         
         const materialInfo = document.getElementById("material-info");
-
-        uploadButton.classList.remove("btn-primary");
-
-        await controller.materials.uploadMaterial({
+        
+        const materialInfoUpload = {
             name: materialNameEle.value,
             type: materialInfo.type.value,
             section: section,
             materialPicture: files[0],
-        })
+            numQuestions: Number(keyTotal),
+        }
 
-        uploadButton.classList.add("btn-primary");
+        const formValidation = controller.materials.uploadValidation(materialInfoUpload);
+        console.log(formValidation);
+        if (formValidation){
+            document.getElementById("loader").innerHTML = `<div id="loader" class="lds-dual-ring center"></div>`;
+            uploadButton.classList.remove("btn-primary");
+            await controller.materials.uploadMaterial(materialInfoUpload);
+            document.getElementById("loader").innerHTML = "";
+            uploadButton.classList.add("btn-primary");
+            view.setMessage("form-success", `"${materialInfoUpload.section.sectionName}" of "${materialInfoUpload.name}" is successfully uploaded`)
+        }
     })
     
 }

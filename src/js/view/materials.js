@@ -5,9 +5,20 @@ import view from "../view";
 
 import riot from 'riot';
 
+const addEventToEditInfo = () => {    
+    //edit info buttons
+    const editInfoButtons = document.getElementsByClassName("edit-info");
+    for (let editInfoButton of editInfoButtons){
+        editInfoButton.addEventListener("click", (e) => {
+            const materialName = e.target.getAttribute("materialName");
+            window.location.href = `/materialInfo?materialName=${materialName}`;
+        })
+    }
+}
+
 const materials = async (userEmail) => {
     //retrieve all materials
-    const materialsType = "Reading";
+    var materialsType = "Reading";
     const materialsWithType = await controller.materials.getMaterialsWithType(materialsType);
 
     //opts
@@ -30,23 +41,26 @@ const materials = async (userEmail) => {
     //choose type
     const materialTypeEles = document.getElementsByClassName("material-type");
     for (let materialTypeEle of materialTypeEles){
-        const materialTypeEleContainer = materialTypeEle.parentElement;
-        materialTypeEleContainer.addEventListener("click", async (e) => {
-            materialsType = e.target.innerText;
+        materialTypeEle.parentElement.addEventListener("click", async (e) => {
+            for (let materialTypeEle of materialTypeEles){
+                if (materialTypeEle.parentElement.parentElement.classList.contains("border-right")){
+                    materialTypeEle.parentElement.parentElement.classList.remove("border-right");
+                    materialTypeEle.parentElement.parentElement.classList.remove("border-standard")
+                }
+            }
+
+            materialTypeEle.parentElement.parentElement.classList.remove("border-standard");
+            materialTypeEle.parentElement.parentElement.classList.add("border-right");
+
+            //update data
+            materialsType = materialTypeEle.innerText;
             materialsPage.opts.materialsWithType = await controller.materials.getMaterialsWithType(materialsType);
             materialsPage.update();
+            addEventToEditInfo();
         })
     }
 
-
-    //edit info buttons
-    const editInfoButtons = document.getElementsByClassName("edit-info");
-    for (let editInfoButton of editInfoButtons){
-        editInfoButton.addEventListener("click", (e) => {
-            const materialName = e.target.getAttribute("materialName");
-            window.location.href = `/materialInfo?materialName=${materialName}`;
-        })
-    }
+    addEventToEditInfo();
 
     //search bar
     const searchBarButton = document.getElementById("search-bar-btn");

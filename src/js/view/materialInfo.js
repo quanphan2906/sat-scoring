@@ -9,7 +9,7 @@ import riot from 'riot';
 const materialInfo = async (userEmail) => {
     //query
     const queryResult = controller.query();
-    const materialNameQuery = queryResult.materialName;
+    const materialNameQuery = decodeURIComponent(queryResult.materialName);
     const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialNameQuery);
 
     //opts

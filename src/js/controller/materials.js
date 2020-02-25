@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import "firebase/firestore";
 import controller from "../controller";
+import view from "../view";
 
 const getMaterialInfoWithMaterialName = async (materialName) => {
     const db = firebase.firestore();
@@ -65,12 +66,45 @@ const createKeyWords = (title) => {
     return arrTitle;
 }
 
+const uploadValidation = (materialInfoUpload) => {
+    //form validation
+    if (!materialInfoUpload.name){
+        view.setMessage("materialName-error", "Please input material's name")
+    } else {
+        view.setMessage("materialName-error", "")
+    }
+    if (!materialInfoUpload.section.sectionName){
+        view.setMessage("numberOfSections-error", "Please input the number of sections")
+    } else {
+        view.setMessage("numberOfSections-error", "")
+    }
+    if (materialInfoUpload.numQuestions == 0){
+        view.setMessage("key-total-error", "Please input the number of answer keys")
+    } else {
+        view.setMessage("key-total-error", "")
+    }
+    if (materialInfoUpload.section.answers.length != Number(materialInfoUpload.numQuestions + 1)){
+        view.setMessage("inputs", "Please provide enough answer keys");
+    } else {
+        view.setMessage("inputs", "")
+    }
+    if (!materialInfoUpload.materialPicture){
+        view.setMessage("img-upload-error", "Please upload an image for the new material")
+    } else {
+        view.setMessage("img-upload-error", "")
+    }
+    if (materialInfoUpload.name 
+        && materialInfoUpload.section.sectionName 
+        && materialInfoUpload.numQuestions!= 0 
+        && materialInfoUpload.materialPicture 
+        && materialInfoUpload.section.answers.length == Number(materialInfoUpload.numQuestions + 1)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 const uploadMaterial = async (materialInfoUpload) => {
-    //upload material picture to firebase storage
-    const storageRef = firebase.storage().ref("previewImages/" + materialInfoUpload.materialPicture.name);
-    const r = await storageRef.put(materialInfoUpload.materialPicture);
-    const fileUrls = await r.ref.getDownloadURL();
-    
     //upload information to firestore
     const db = firebase.firestore();
     const materialName = materialInfoUpload.name;
@@ -78,6 +112,11 @@ const uploadMaterial = async (materialInfoUpload) => {
     const materialInfo = await controller.materials.getMaterialInfoWithMaterialName(materialName);
     if (materialInfo == undefined){
         //for section 1 upload
+            //upload material picture to firebase storage
+        const storageRef = firebase.storage().ref("previewImages/" + materialInfoUpload.materialPicture.name);
+        const r = await storageRef.put(materialInfoUpload.materialPicture);
+        const fileUrls = await r.ref.getDownloadURL();
+        console.log(fileUrls);
         db.collection("materials").add({
             name: materialInfoUpload.name,
             type: materialInfoUpload.type,
@@ -134,7 +173,7 @@ const deleteSection = async (materialInfo, sectionName) => {
     await db.collection("materials").doc(materialInfo.id).update({
         sections: sectionsData,
     })
-} //TODO: delete section = delete answer keys of it, not deleteing it literrally
+} //TODO: delete section = delete answer keys of it, not deleting it literrally
 
 const addSection = async (materialInfo, section) => {
     const db = firebase.firestore();
@@ -148,6 +187,7 @@ const materials = {
     getMaterialsWithType,
     getMaterialsWithKeywords,
     getAnswerKeys,
+    uploadValidation,
     uploadMaterial,
     updateKeys,
     editName,
