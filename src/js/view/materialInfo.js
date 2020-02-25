@@ -6,6 +6,40 @@ import view from "../view";
 
 import riot from 'riot';
 
+const renderKeyListContainer = (answerkeys) => {
+    const keyListContainer = document.getElementById("key-list-container");
+
+    keyListContainer.innerHTML = "";
+
+    for (let i = 0; i < answerkeys.length -1; i++){
+        const answer = answerkeys[i+1].toUpperCase();
+        keyListContainer.innerHTML +=`
+        <div class="answer-item margin-left-12px flex-row">
+            <label for="" class="font-12px" style="margin-right: 8px; padding-top: 5px; width: 12px">${i+1}</label>
+            <input class="key" question="${i+1}" type="text" style="height: 30px; width: 100px;" value="${answer}">
+        </div>
+        `;
+    }
+
+    keyListContainer.innerHTML += `
+    <i class="fas fa-times pointer" style="color: #f5222d; width: 14px; margin: 8px 4px 0px 16px;"></i>
+    <i class="fas fa-plus pointer" style="margin: 8px 0px 0px 16px;"></i>
+    `;
+
+    const deleteKeysSymbols = document.getElementsByClassName("fa-times");
+    deleteKeysSymbols[0].addEventListener("click", (e) => {
+        answerkeys.pop();
+        renderKeyListContainer(answerkeys);
+    })
+
+    const addKeysSymbol = document.getElementsByClassName("fa-plus");
+    addKeysSymbol[0].addEventListener("click", (e) => {
+        answerkeys.push("");
+        renderKeyListContainer(answerkeys);
+        // if this way, when press +, new data just inserted will disappear TODO
+    })
+}
+
 const materialInfo = async (userEmail) => {
     //query
     const queryResult = controller.query();
@@ -49,18 +83,14 @@ const materialInfo = async (userEmail) => {
             //display keys
             sectionName = e.target.innerText.toLowerCase();
             const answerkeys = await controller.materials.getAnswerKeys(materialInfo, sectionName);
-            for (let i = 0; i < answerkeys.length; i++){
-                const answer = answerkeys[i+1].toUpperCase();
-                keyListContainer.innerHTML +=`
-                <div class="answer-item margin-left-12px flex-row">
-                    <label for="" class="font-12px" style="margin-right: 8px; padding-top: 5px; width: 12px">${i+1}</label>
-                    <input class="key" question="${i+1}" type="text" style="height: 30px; width: 100px;" value="${answer}">
-                    <div class="check-answer-symbol flex-col"></div>
-                </div>
-                `;
-            }
+
+            //remove the number of questions input
+            document.getElementById("number-of-questions-input").value = "";
+        
+            renderKeyListContainer(answerkeys);
         })
     }
+
 
     //update answer button
     const updateButton = document.getElementById("update-btn");
@@ -74,91 +104,94 @@ const materialInfo = async (userEmail) => {
             keys.push(key);
         };
 
+        document.getElementById("loader").innerHTML = `<div id="loader" class="lds-dual-ring center"></div>`;
         e.target.classList.remove("btn-primary");
         await controller.materials.updateKeys(materialInfo, sectionName, keys);
+        document.getElementById("loader").innerHTML = "";
         e.target.classList.add("btn-primary");
     })
 
     //add event to change name, type and sections of the material
     const updateModal = initModal(document.getElementById("update-modal"));
 
-    document.getElementById("update-name").addEventListener("click", (e) => {
-        updateModal.open();
+    //FOR FUTURE DEVELOPMENT
+    // document.getElementById("update-name").addEventListener("click", (e) => {
+    //     updateModal.open();
 
-        document.getElementById("update-form").innerHTML = `
-        <div class="font-20px">You are updating <b>material's name</b></div>
-        <input id="material-new-name" placeholder="New name for the material" class="border-standard margin-bot-12px margin-top-12px"></input>
-        <button id="confirm-btn" class="bg-color-danger color-white">Confirm</button>
-        <button id="unconfirm-btn" class="btn-primary color-black">NO!Back to safety</button>
-        `
+    //     document.getElementById("update-form").innerHTML = `
+    //     <div class="font-20px">You are updating <b>material's name</b></div>
+    //     <input id="material-new-name" placeholder="New name for the material" class="border-standard margin-bot-12px margin-top-12px"></input>
+    //     <button id="confirm-btn" class="bg-color-danger color-white">Confirm</button>
+    //     <button id="unconfirm-btn" class="btn-primary color-black">NO!Back to safety</button>
+    //     `
         
-        document.getElementById("confirm-btn").addEventListener("click", async (e) => {
-            e.preventDefault();
-            await controller.materials.editName(materialInfo, document.getElementById("material-new-name").value);
-            window.location.href = `/materialInfo?materialName=${document.getElementById("material-new-name").value}`
-        })
+    //     document.getElementById("confirm-btn").addEventListener("click", async (e) => {
+    //         e.preventDefault();
+    //         await controller.materials.editName(materialInfo, document.getElementById("material-new-name").value);
+    //         window.location.href = `/materialInfo?materialName=${document.getElementById("material-new-name").value}`
+    //     })
 
-        document.getElementById("unconfirm-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            updateModal.close();
-        })
-    })
+    //     document.getElementById("unconfirm-btn").addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         updateModal.close();
+    //     })
+    // })
 
-    document.getElementById("update-type").addEventListener("click", (e) => {
-        updateModal.open();
+    // document.getElementById("update-type").addEventListener("click", (e) => {
+    //     updateModal.open();
 
-        document.getElementById("update-form").innerHTML = `
-        <div class="font-20px">You are updating <b>material's type</b></div>
-        <input id="material-new-type" placeholder="New type for the material" class="border-standard margin-bot-12px margin-top-12px"></input>
-        <button id="confirm-btn" class="bg-color-danger color-white">Confirm</button>
-        <button id="unconfirm-btn" class="btn-primary color-black">NO!Back to safety</button>
-        `
+    //     document.getElementById("update-form").innerHTML = `
+    //     <div class="font-20px">You are updating <b>material's type</b></div>
+    //     <input id="material-new-type" placeholder="New type for the material" class="border-standard margin-bot-12px margin-top-12px"></input>
+    //     <button id="confirm-btn" class="bg-color-danger color-white">Confirm</button>
+    //     <button id="unconfirm-btn" class="btn-primary color-black">NO!Back to safety</button>
+    //     `
         
-        document.getElementById("confirm-btn").addEventListener("click", async (e) => {
-            e.preventDefault();
-            await controller.materials.editType(materialInfo, document.getElementById("material-new-type").value);
-            location.reload();
-        })
+    //     document.getElementById("confirm-btn").addEventListener("click", async (e) => {
+    //         e.preventDefault();
+    //         await controller.materials.editType(materialInfo, document.getElementById("material-new-type").value);
+    //         location.reload();
+    //     })
         
-        document.getElementById("unconfirm-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            updateModal.close();
-        })
-    })
+    //     document.getElementById("unconfirm-btn").addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         updateModal.close();
+    //     })
+    // })
 
-    const updateSectionSymbols = document.getElementsByClassName("update-section");
-    for (let updateSectionSymbol of updateSectionSymbols){
-        updateSectionSymbol.addEventListener("click", (e) => {
-            updateModal.open();
+    // const updateSectionSymbols = document.getElementsByClassName("update-section");
+    // for (let updateSectionSymbol of updateSectionSymbols){
+    //     updateSectionSymbol.addEventListener("click", (e) => {
+    //         updateModal.open();
 
-            const sectionName = e.target.parentElement.childNodes[1].innerText;
-            const updateForm = document.getElementById("update-form");
-            updateForm.innerHTML = `
-                <div class="font-20px">You are deleting <b>${sectionName}</b></div>
-                <div class="font-14px opacity-50 margin-bot-12px">Are you sure?</div>
-                <button id="confirm-btn" class="bg-color-danger color-white">Confirm</button>
-                <button id="unconfirm-btn" class="btn-primary color-black">NO! Take me back to safety</button>
-            `
+    //         const sectionName = e.target.parentElement.childNodes[1].innerText;
+    //         const updateForm = document.getElementById("update-form");
+    //         updateForm.innerHTML = `
+    //             <div class="font-20px">You are deleting <b>${sectionName}</b></div>
+    //             <div class="font-14px opacity-50 margin-bot-12px">Are you sure?</div>
+    //             <button id="confirm-btn" class="bg-color-danger color-white">Confirm</button>
+    //             <button id="unconfirm-btn" class="btn-primary color-black">NO! Take me back to safety</button>
+    //         `
 
-            document.getElementById("confirm-btn").addEventListener("click", async (e) => {
-                e.preventDefault();
-                await controller.materials.deleteSection(materialInfo, sectionName.toLowerCase());
-                location.reload();
-            })
+    //         document.getElementById("confirm-btn").addEventListener("click", async (e) => {
+    //             e.preventDefault();
+    //             await controller.materials.deleteSection(materialInfo, sectionName.toLowerCase());
+    //             location.reload();
+    //         })
             
-            document.getElementById("unconfirm-btn").addEventListener("click", (e) => {
-                e.preventDefault();
-                updateModal.close();
-            })
-        })
-    }
+    //         document.getElementById("unconfirm-btn").addEventListener("click", (e) => {
+    //             e.preventDefault();
+    //             updateModal.close();
+    //         })
+    //     })
+    // }
 
     //add section button
     document.getElementById("add-section").addEventListener("click", (e) => {
         updateModal.open();
         
         const updateForm = document.getElementById("update-form");
-        updateForm.innerHTML += `
+        updateForm.innerHTML = `
         <div class="font-20px">You are adding a section</div>
         <div class="flex-row">
             <div class="opacity-50" style="padding-top: 11px; margin-right: 12px;" >Section number</div>
@@ -188,17 +221,28 @@ const materialInfo = async (userEmail) => {
             updateButtonContainer.innerHTML = "";
             updateButtonContainer.appendChild(uploadNewSectionButton);
 
+            for (let option of sectionOptions){
+                if (option.classList.contains("btn-primary")){
+                    option.classList.remove("btn-primary");
+                    break;
+                }
+            }
+
+            keyListContainer.innerHTML = "";
+
             updateModal.close();
 
             numberOfQuestionsInputContainer.addEventListener("submit", (e) => {
                 e.preventDefault();
             });
 
+            var keyTotal = 0;
             numberOfQuestionsInput.addEventListener("change", (e) => {
                 e.preventDefault();
 
                 //add key containers
-                const keyTotal = e.target.value;
+                keyListContainer.innerHTML = "";
+                keyTotal = e.target.value;
                 for (var i = 0; i < keyTotal; i++){
                     keyListContainer.innerHTML += `
                     <div id="key-item" class="margin-left-12px flex-row" style="flex-wrap: nowrap;">
@@ -217,16 +261,24 @@ const materialInfo = async (userEmail) => {
                 var keys = [null];
                 const keyEles = document.getElementsByClassName("key");
                 for (let keyEle of keyEles){
-                    keys.push(keyEle.value.toLowerCase());
+                    if (keyEle.value != ""){    
+                        keys.push(keyEle.value.toLowerCase());
+                    }
                 }
         
                 const section = {
                     sectionName: "section" + " " + newSectionName.value,
                     answers: keys,
+                    total: Number(keyTotal),
                 };
 
-                await controller.materials.addSection(materialInfo, section);
-                location.reload();
+                const validation = controller.materials.uploadNewSectionValidation(section);
+                if (validation){
+                    document.getElementById("loader").innerHTML = `<div id="loader" class="lds-dual-ring center"></div>`;
+                    await controller.materials.addSection(materialInfo, section);
+                    document.getElementById("loader").innerHTML = "";
+                    location.reload();
+                }                
             })
 
         })

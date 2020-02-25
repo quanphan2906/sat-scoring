@@ -22,16 +22,13 @@
         <div>
             <div class="flex-center-row">
                 <div class="font-20px text-center">{opts.name}</div>
-                <i id="update-name" class="fas fa-times fit-content" style="color: #000; margin-top: 9px; margin-left: 12px;"></i>
             </div>
             <div class="flex-center-row">
                 <div class="font-16px text-center"><i>Type: {opts.type}</i></div>
-                <i id="update-type" class="fas fa-times fit-content" style="color: #000; margin-top: 7px; margin-left: 12px;" change="type"></i>
             </div>
             <div style="margin-bottom: 72px;" class="flex-row">
                 <div each="{section in opts.sections}" class="flex-row">
                     <button class="section-option margin-left-12px margin-top-12px flex-row">{section.sectionName}</button>
-                    <i class="update-section fas fa-times fit-content" style="color: #000; margin: 23px 4px 0px 4px;"></i>
                 </div>
             </div>
             <div class="flex-center-row">
@@ -46,14 +43,20 @@
     <div class="line" style="margin-top: 24px;"></div>
 
     <form id="number-of-questions-input" class="flex-center-row margin-top-24px"></form>
+    <div id="number-of-questions-input-error" class="form-error"></div>
 
     <div class="margin-top-24px">
         <div class="text-center font-20px">{opts.type}</div>
         <div id="key-list-container" class="flex-row center text-center" style="margin: 12px 72px 0px 72px"></div>
+        <div id="key-length-error" class="form-error"></div>
     </div>
 
-    <div id="update-button-container" class="flex-center margin-top-24px">
+    <div id="update-button-container" class="flex-center margin-top-24px" style="margin-bottom: 48px;">
         <button id="update-btn" class="center btn-primary">Update answers</button>
+    </div>
+
+    <div class="flex-col">
+        <div id="loader" style="align-self: center;"></div>
     </div>
 
     <div class="flex-center mx-modal" id="update-modal" style="margin: 0 auto;">

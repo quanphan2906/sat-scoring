@@ -104,6 +104,27 @@ const uploadValidation = (materialInfoUpload) => {
     }
 }
 
+const uploadNewSectionValidation = (sectionInfoUpload) => {
+    if (!sectionInfoUpload.total){
+        view.setMessage("number-of-questions-input-error", "Please input the number of answer keys you want");
+    } else{
+        view.setMessage("number-of-questions-input-error", "")
+    }
+    if (sectionInfoUpload.answers.length != Number(sectionInfoUpload.total + 1)){
+        view.setMessage("key-length-error", "Please provide enough answer keys")
+    } else {
+        view.setMessage("key-length-error", "")
+    }
+    console.log("sectionInfoUpload.answers.length", sectionInfoUpload.answers.length);
+    console.log("Number(sectionInfoUpload.total + 1)", Number(sectionInfoUpload.total + 1))
+
+    if (sectionInfoUpload.total && sectionInfoUpload.answers.length == Number(sectionInfoUpload.total + 1)){
+        return true
+    } else {
+        return false
+    }
+}
+
 const uploadMaterial = async (materialInfoUpload) => {
     //upload information to firestore
     const db = firebase.firestore();
@@ -188,6 +209,7 @@ const materials = {
     getMaterialsWithKeywords,
     getAnswerKeys,
     uploadValidation,
+    uploadNewSectionValidation,
     uploadMaterial,
     updateKeys,
     editName,
