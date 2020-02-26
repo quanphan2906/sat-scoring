@@ -23,7 +23,8 @@ const login = () => {
             password: loginForm.password.value,
         }
 
-        controller.login(loginInfo);
+        const loader = document.getElementById("loader");
+        await controller.login(loginInfo);
     })
 }
 

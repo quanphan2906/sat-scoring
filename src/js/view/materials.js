@@ -45,11 +45,13 @@ const materials = async (userEmail) => {
             for (let materialTypeEle of materialTypeEles){
                 if (materialTypeEle.parentElement.parentElement.classList.contains("border-right")){
                     materialTypeEle.parentElement.parentElement.classList.remove("border-right");
-                    materialTypeEle.parentElement.parentElement.classList.remove("border-standard")
+                    materialTypeEle.parentElement.parentElement.classList.add("border-standard");
                 }
             }
 
-            materialTypeEle.parentElement.parentElement.classList.remove("border-standard");
+            if (materialTypeEle.parentElement.parentElement.classList.contains("border-standard")){
+                materialTypeEle.parentElement.parentElement.classList.remove("border-standard");
+            } 
             materialTypeEle.parentElement.parentElement.classList.add("border-right");
 
             //update data

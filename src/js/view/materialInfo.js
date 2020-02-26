@@ -28,12 +28,22 @@ const renderKeyListContainer = (answerkeys) => {
 
     const deleteKeysSymbols = document.getElementsByClassName("fa-times");
     deleteKeysSymbols[0].addEventListener("click", (e) => {
+        const keys = document.getElementsByClassName("key");
+        answerkeys = [null];
+        for (let i = 0; i < keys.length; i++){
+            answerkeys.push(keys[i].value)
+        }
         answerkeys.pop();
         renderKeyListContainer(answerkeys);
     })
 
     const addKeysSymbol = document.getElementsByClassName("fa-plus");
     addKeysSymbol[0].addEventListener("click", (e) => {
+        const keys = document.getElementsByClassName("key");
+        answerkeys = [null];
+        for (let i = 0; i < keys.length; i++){
+            answerkeys.push(keys[i].value)
+        }
         answerkeys.push("");
         renderKeyListContainer(answerkeys);
         // if this way, when press +, new data just inserted will disappear TODO
@@ -97,13 +107,14 @@ const materialInfo = async (userEmail) => {
     updateButton.addEventListener("click", async (e) =>{
         e.preventDefault();
 
-        var keys = ["null"];
+        var keys = [null];
         const keyInputs = document.getElementsByClassName("key");
         for (let keyInput of keyInputs){
             const key = keyInput.value.toLowerCase();
-            keys.push(key);
+            if (key != "") keys.push(key);
         };
 
+        const validation = controller.materials.updateKeysValidation(keys, keyInputs);
         document.getElementById("loader").innerHTML = `<div id="loader" class="lds-dual-ring center"></div>`;
         e.target.classList.remove("btn-primary");
         await controller.materials.updateKeys(materialInfo, sectionName, keys);

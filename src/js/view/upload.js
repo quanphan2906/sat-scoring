@@ -159,7 +159,7 @@ const upload = (userEmail) => {
         const formValidation = controller.materials.uploadValidation(materialInfoUpload);
         console.log(formValidation);
         if (formValidation){
-            document.getElementById("loader").innerHTML = `<div id="loader" class="lds-dual-ring center"></div>`;
+            document.getElementById("loader").innerHTML = `<div class="lds-dual-ring center"></div>`;
             uploadButton.classList.remove("btn-primary");
             await controller.materials.uploadMaterial(materialInfoUpload);
             document.getElementById("loader").innerHTML = "";

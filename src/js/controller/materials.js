@@ -153,6 +153,14 @@ const uploadMaterial = async (materialInfoUpload) => {
     }
 }
 
+const updateKeysValidation = (keys, keyInputs) => {
+    if (keys.length != Number(keyInputs.length + 1)){
+        view.setMessage("key-length-error", "Please provide enough answer keys")
+    } else {
+        view.setMessage("key-length-error", "")
+    }
+}
+
 const updateKeys = async (materialInfo, sectionNameQuery, keys) => {
     const db = firebase.firestore();
     // for (let section of materialInfo.data.sections){
@@ -211,6 +219,7 @@ const materials = {
     uploadValidation,
     uploadNewSectionValidation,
     uploadMaterial,
+    updateKeysValidation,
     updateKeys,
     editName,
     editType,

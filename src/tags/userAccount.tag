@@ -35,7 +35,7 @@
 
     <div class="line" style="margin-top: 24px;"></div>
 
-    <div id="old-test-wrapper" style="width: 100%;" class="flex-col">
+    <div id="old-test-wrapper" style="width: 100%;" class="flex-col margin-bot-24px">
         <div class="margin-top-24px font-20px" style="align-self: center;">Review</div>
         <div each="{test in opts.data.oldTests}" class="border-standard center margin-top-24px" style="width: 70%;">
             <div class="old-test-container flex-row fit-content" style="flex-wrap: nowrap;">

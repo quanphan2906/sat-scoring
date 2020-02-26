@@ -24,8 +24,7 @@
                     
                     <button class="button-primary btn center margin-top-12px" style="margin-right: 0px">Log in</button>
                     
-                    <div class="margin-top-12px form-success" id="form-success"></div>
-                    <div class="margin-top-12px form-error" id="form-error"></div>
+                    <div id="loader" style="align-self: center;"></div>
                 </form>
             </div>
         </div>

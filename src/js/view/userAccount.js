@@ -24,12 +24,17 @@ const userAccount = async (userEmail) => {
     view.header();
 
     //chart
-    const scores = userInfo.data.oldTests.map((oldTest) => {
-        return oldTest.score;
-    })
-    const oldTestNames = userInfo.data.oldTests.map((oldTest) => {
-        return oldTest.name;
-    }) 
+    var scores = [];
+    var oldTestNames = [];
+    if (userInfo.data.oldTests){
+        scores = userInfo.data.oldTests.map((oldTest) => {
+            return oldTest.score;
+        })
+        oldTestNames = userInfo.data.oldTests.map((oldTest) => {
+            return oldTest.name;
+        })
+    }
+
     const resultChartContainer = document.getElementById("result-chart");
     const ctx = resultChartContainer.getContext("2d");
     var myChart = new Chart(ctx, {

@@ -29,7 +29,7 @@
             <button id="upload-btn" class="btn-primary margin-bot-24px">Upload materials</button>
             <div class="line" style="margin-bottom: 24px;"></div>
             <div class="font-20px margin-bot-24px">Choose a type</div>
-            <div class="border-standard box-shadow-standard fit-content margin-bot-24px flex-row">
+            <div class="border-right box-shadow-standard fit-content margin-bot-24px flex-row">
                 <div class="fit-content pointer" style="margin: 8px;">
                     <img src="../assets/reading.jpg" alt="" class="sections-img">
                     <div class="material-type margin-top-12px font-16px center text-center fit-content">Reading</div>

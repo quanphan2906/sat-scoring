@@ -11,6 +11,8 @@ const login = async (loginInfo) => {
         document.getElementById("password-error").innerText += `Please input your password`;
     }
 
+    
+
     if (loginInfo.email && loginInfo.password){
         try {
             const loginResult = await firebase.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password);
