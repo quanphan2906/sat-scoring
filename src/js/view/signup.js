@@ -9,6 +9,10 @@ const signup = () => {
     const signup = riot.mount("div#root", "signup");
 
     //redirect to login page
+    document.getElementById("login").addEventListener("click", (e) => {
+        window.location.href = "/signin";
+    })
+
     document.getElementById("already-have-account").addEventListener("click", (e) => {
         e.preventDefault();
         window.location.href = "/signin";

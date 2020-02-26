@@ -11,9 +11,9 @@ route.base("/");
 
 route("/", () => {controller.users.assistantCheckIn(view.overview)})
 
-route("/signup", () => {view.signup()})
+route("/signup..", () => {view.signup()})
 
-route("/signin", () => {view.login()})
+route("/signin..", () => {view.login()})
 
 route("/userAccount..", () => {controller.users.userCheckIn(view.userAccount)})
 

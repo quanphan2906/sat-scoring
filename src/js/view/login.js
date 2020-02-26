@@ -4,7 +4,8 @@ import controller from "../controller";
 
 import riot from 'riot';
 
-const login = () => {
+
+const login = async () => {
     //mount page
     const login = riot.mount("div#root", "signin");
 
