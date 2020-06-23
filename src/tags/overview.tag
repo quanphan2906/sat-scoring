@@ -1,8 +1,7 @@
 <overview>
     <div class="flex-row border-standard">
         <div class="margin-top-12px" style="margin-left: 144px; margin-bottom: 8px">
-            <div class="font-Pacifico font-20px">Thầy Julius</div>
-            <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
+            <div class="font-Pacifico font-20px">SAT Scoring App</div>
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 360px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">

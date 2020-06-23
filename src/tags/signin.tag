@@ -1,8 +1,7 @@
 <signin>
     <div id="register-header" class="flex-row border-standard" style="margin-bottom: 48px;">
         <div class="margin-top-12px" style="margin-left: 144px; margin-bottom: 8px">
-            <div class="font-Pacifico font-20px">Thầy Julius</div>
-            <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
+            <<div class="font-Pacifico font-20px">SAT Scoring App</div>
         </div>
         <div class="margin-top-12px" style="margin-left: 450px; margin-bottom: 8px">
             <button id="to-login-page">Log in</button>
@@ -26,6 +25,7 @@
                     
                     <div id="loader" style="align-self: center;"></div>
                 </form>
+                <div id="form-error"></div>
             </div>
         </div>
     </div>

@@ -2,21 +2,23 @@ import "../../css/index.css";
 import "../../tags/signup.tag";
 import controller from "../controller";
 
-import riot from 'riot';
+import riot from "riot";
 
 const signup = () => {
     //mount page
     const signup = riot.mount("div#root", "signup");
 
     //redirect to login page
-    document.getElementById("login").addEventListener("click", (e) => {
+    document.getElementById("log-in").addEventListener("click", (e) => {
         window.location.href = "/signin";
-    })
+    });
 
-    document.getElementById("already-have-account").addEventListener("click", (e) => {
-        e.preventDefault();
-        window.location.href = "/signin";
-    })
+    document
+        .getElementById("already-have-account")
+        .addEventListener("click", (e) => {
+            e.preventDefault();
+            window.location.href = "/signin";
+        });
 
     //register via controller
     const registerForm = document.getElementById("register-form");
@@ -29,10 +31,10 @@ const signup = () => {
             email: registerForm.email.value,
             password: registerForm.password.value,
             confirmPassword: registerForm.confirmPassword.value,
-        }
+        };
 
         controller.signup(registerInfo);
-    })
-}
+    });
+};
 
-export {signup}
+export { signup };

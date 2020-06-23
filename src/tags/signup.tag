@@ -1,8 +1,7 @@
 <signup>
     <div id="register-header" class="flex-row border-standard" style="margin-bottom: 48px;">
         <div class="margin-top-12px" style="margin-left: 144px; margin-bottom: 8px">
-            <div class="font-Pacifico font-20px">Thầy Julius</div>
-            <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
+            <div class="font-Pacifico font-20px">SAT Scoring App</div>
         </div>
         <div class="margin-top-12px" style="margin-left: 450px; margin-bottom: 8px">
             <button id="log-in">Log in</button>
@@ -14,7 +13,7 @@
         <div id="student-register-container" class="flex-row margin-top-24px">
             <img class="register-img" src="../assets/students.jpg" alt="" style="height: 400px; width: auto; margin-left: 96px;">
             <div class="flex-col" style="margin-left: 96px">
-                <div class="font-20px margin-bot-12px" style="margin-left: 133px;">Julius's student? Sign up here!</div>
+                <div class="font-20px margin-bot-12px" style="margin-left: 133px;">Sign up here!</div>
                 <form id="register-form" action="" class="flex-col margin-top-24px" style="margin-left: 133px;">
                     <div class="flex-row flex-space-between">
 

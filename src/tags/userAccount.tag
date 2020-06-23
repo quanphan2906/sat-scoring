@@ -1,8 +1,7 @@
 <useraccount>
     <div id="submit-header" class="flex-row border-standard" style="margin-bottom: 48px;">
         <div class="margin-top-12px" style="margin-left: 144px; margin-bottom: 8px">
-            <div class="font-Pacifico font-20px">Thầy Julius</div>
-            <div class="font-14px">Luyện thi SAT & IELTS với chất lượng tốt nhất</div>
+            <div class="font-Pacifico font-20px">SAT Scoring App</div>
         </div>
         <div class="margin-top-12px flex-row" style="margin-left: 400px; margin-bottom: 8px">
             <img src="../assets/students.png" alt="" width="50px" height="auto" style="margin-right: 24px;">
@@ -22,7 +21,7 @@
             <div class="flex-col" style="margin-top: 8px;">
                 <div class="font-16px"><b>Classes</b></div>
                 <div class="flex-row" style="flex-wrap: wrap; margin-top: 4px;">
-                    <button class="class-name" each="{class in opts.classNamesFirebase}" style="margin-left: 8px;">{class}</button>
+                    <button class="class-name" each="{class in opts.classNamesFirebase}" style="margin-left: 8px;" value={class}>{class}</button>
                 </div>
             </div>
             <button id="delete-btn" class="margin-top-24px center bg-color-danger color-white" style="width: 164px;">Delete account</button>
